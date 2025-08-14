@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "io.github.brookite.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+      "PlayerDropLifetimeIncreaserMixin",
+      "PlayerDropMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
