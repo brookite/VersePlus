@@ -3,15 +3,16 @@
 	"id": "verseplus",
 	"version": "${version}",
 	"name": "VersePlus",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Minecraft Vanilla Enhancement Mod for Fabric",
 	"authors": [
 		"brookit"
 	],
+    "accessWidener" : "verseplus.accesswidener",
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/brookite/VersePlus",
+		"sources": "https://github.com/brookite/VersePlus"
 	},
-	"license": "CC0-1.0",
+	"license": "Apache-2.0",
 	"icon": "assets/verseplus/icon.png",
 	"environment": "*",
 	"entrypoints": {
