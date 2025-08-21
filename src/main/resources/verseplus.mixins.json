@@ -3,9 +3,12 @@
 	"package": "io.github.brookite.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+      "LoomPatternLimitIncreaserMixin",
+      "PlayerChainSpawnpointsMixin",
       "PlayerDropLifetimeIncreaserMixin",
-      "PlayerDropMixin"
-	],
+      "PlayerDropMixin",
+      "WritableBookContentLimitIncreaserMixin"
+    ],
 	"injectors": {
 		"defaultRequire": 1
 	},
