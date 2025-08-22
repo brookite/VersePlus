@@ -51,7 +51,7 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
         }
 
         if (this.respawn != null
-                && findRespawnPosition(getWorld(), this.respawn, false).isEmpty()
+                && findRespawnPosition(getWorld(), this.respawn, true).isEmpty()
                 && this.respawns.size() > 0) {
             this.respawn = this.respawns.removeFirst();
         }
