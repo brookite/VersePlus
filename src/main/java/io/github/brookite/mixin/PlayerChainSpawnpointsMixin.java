@@ -1,6 +1,7 @@
 package io.github.brookite.mixin;
 
 import com.mojang.serialization.Codec;
+import io.github.brookite.interfaces.ChainedRespawnManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
@@ -9,21 +10,22 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
-import java.util.Stack;
-import java.util.stream.Stream;
+
+import static io.github.brookite.VersePlusLimits.MAX_RESPAWNS;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class PlayerChainSpawnpointsMixin {
-    private static final int MAX_RESPAWNS = 32;
+public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManager {
 
-    private Stack<ServerPlayerEntity.Respawn> respawns = new Stack<>();
+    @Unique public ArrayDeque<ServerPlayerEntity.Respawn> respawns = new ArrayDeque<>();
     @Shadow private ServerPlayerEntity.Respawn respawn;
 
     @Shadow
@@ -40,30 +42,45 @@ public abstract class PlayerChainSpawnpointsMixin {
      */
     @Overwrite
     public @Nullable ServerPlayerEntity.Respawn getRespawn() {
-        var allRespawn = Stream.concat(Stream.of(this.respawn), this.respawns.stream());
-        var respawn = allRespawn.dropWhile(r -> !findRespawnPosition(getWorld(), r, true).isPresent()).findFirst().orElse(null);
-
-        var toRemoveRespawns = allRespawn
-                .takeWhile(r -> !findRespawnPosition(getWorld(), r, false)
-                        .isPresent() && this.respawns.contains(respawn)).toList();
+        var toRemoveRespawns = this.respawns.stream()
+                .filter(r -> findRespawnPosition(getWorld(), r, false)
+                        .isEmpty()).toList();
 
         for (var invalidRespawn : toRemoveRespawns) {
-            respawns.remove(invalidRespawn);
+            this.respawns.remove(invalidRespawn);
         }
-        return respawn;
+
+        if (this.respawn != null
+                && findRespawnPosition(getWorld(), this.respawn, false).isEmpty()
+                && this.respawns.size() > 0) {
+            this.respawn = this.respawns.removeFirst();
+        }
+
+        return this.respawn;
+    }
+
+    @Inject(at = @At("TAIL"), method = "copyFrom(Lnet/minecraft/server/network/ServerPlayerEntity;Z)V")
+    public void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        this.respawns = new ArrayDeque<>(((ChainedRespawnManager) oldPlayer).getRespawns());
+    }
+
+    @Override
+    @Unique
+    public ArrayDeque<ServerPlayerEntity.Respawn> getRespawns() {
+        return this.respawns;
     }
 
     @Inject(at = @At("HEAD"), method="setSpawnPoint(Lnet/minecraft/server/network/ServerPlayerEntity$Respawn;Z)V")
     public void setSpawnPoint(ServerPlayerEntity.Respawn respawn, boolean sendMessage, CallbackInfo ci) {
         List<ServerPlayerEntity.Respawn> duplicates = respawns.stream()
-                .filter(e -> e.posEquals(respawn))
+                .filter(e -> e != null && e.posEquals(respawn))
                 .toList();
 
         for (ServerPlayerEntity.Respawn duplicate : duplicates) {
             respawns.remove(duplicate);
         }
 
-        if (!respawn.posEquals(this.respawn)) {
+        if (!respawn.posEquals(this.respawn) && this.respawn != null) {
             respawns.addFirst(this.respawn);
             if (respawns.size() > MAX_RESPAWNS) {
                 respawns.removeLast();
@@ -78,7 +95,6 @@ public abstract class PlayerChainSpawnpointsMixin {
 
     @Inject(at = @At("TAIL"), method="readCustomData(Lnet/minecraft/storage/ReadView;)V")
     protected void readCustomData(ReadView view, CallbackInfo ci) {
-        this.respawns = new Stack<>();
-        this.respawns.addAll(view.read("respawnChain", Codec.list(ServerPlayerEntity.Respawn.CODEC)).orElse(List.of()));
+        this.respawns = new ArrayDeque<>(view.read("respawnChain", Codec.list(ServerPlayerEntity.Respawn.CODEC)).orElse(List.of()));
     }
 }
