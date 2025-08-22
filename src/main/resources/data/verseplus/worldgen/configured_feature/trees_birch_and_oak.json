@@ -8,15 +8,15 @@
         "feature": "minecraft:fallen_birch_tree"
       },
       {
-        "chance": 0.007,
+        "chance": 0.025,
         "feature": "minecraft:oak_bees_0002_leaf_litter"
       },
       {
-        "chance": 0.006,
+        "chance": 0.01,
         "feature": "minecraft:birch_bees_0002_leaf_litter"
       },
       {
-        "chance": 0.005,
+        "chance": 0.008,
         "feature": "minecraft:fancy_oak_bees_0002_leaf_litter"
       },
       {
