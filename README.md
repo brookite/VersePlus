@@ -2,7 +2,13 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 
 *Current supported MC version:* **1.21.8**
 
-*Release status:* **0.1.0-alpha**
+*Release status:* **0.2.0-rc**
 
 ## Current Features
-- Increased up to 5x player's drop lifetime (25 minutes)
+- Increased up to 6x player's drop lifetime (30 minutes)
+- Loom pattern limit increased to 16
+- Reduced leaf litter in forest biome
+- Chained respawn points (buffered 32 spawnpoints)
+
+## Known issues
+- `/spawnpoint` command
