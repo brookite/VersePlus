@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#W"
+    ],
+    "key": {
+        "#": "minecraft:fire_charge",
+        "W": "minecraft:wind_charge"
+    },
+    "result": {
+        "id": "verseplus:throwable_fireball_item",
+        "count": 1
+    }
+}

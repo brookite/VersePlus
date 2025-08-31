@@ -1,9 +1,12 @@
 package io.github.brookite;
 
+import io.github.brookite.registries.RegisterItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -38,5 +41,8 @@ public class VersePlus implements ModInitializer {
     @Override
 	public void onInitialize() {
         changeForestTrees();
+        RegisterItems.initialize();
+        DispenserBlock.registerBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM,
+                new ProjectileDispenserBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));
 	}
 }
