@@ -1,5 +1,6 @@
 package io.github.brookite.items;
 
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
@@ -7,6 +8,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -17,21 +19,36 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class ThrowableFireballItem extends Item implements ProjectileItem {
     private PlayerEntity owner;
-    private final float POWER = 1.8F;
-    private final int EXPLOSION_POWER = 2;
+
+    private static final double DEFAULT_POWER = 0.1;
+    private static final int DEFAULT_EXPLOSION_POWER = 2;
 
     public ThrowableFireballItem(Item.Settings settings) {
         super(settings);
     }
 
+    private Optional<NbtCompound> getCustomParameters(ItemStack stack) {
+        var data = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (data != null) {
+            NbtCompound value = data.copyNbt();
+            return Optional.of(value);
+        }
+        return Optional.empty();
+    }
+
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
+        Optional<NbtCompound> params = getCustomParameters(stack);
         FireballEntity fireballEntity = new FireballEntity(EntityType.FIREBALL, world);
         fireballEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
         fireballEntity.setVelocity(direction.getDoubleVector());
         fireballEntity.setItem(stack);
+        fireballEntity.accelerationPower = params.isPresent() ? params.get().getDouble("power", DEFAULT_POWER) : DEFAULT_POWER;
+        fireballEntity.explosionPower = params.isPresent() ? params.get().getInt("explosionPower", DEFAULT_EXPLOSION_POWER) : DEFAULT_EXPLOSION_POWER;
         return fireballEntity;
     }
 
@@ -43,6 +60,10 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
+        Optional<NbtCompound> params = getCustomParameters(itemStack);
+        double power = params.isPresent() ? params.get().getDouble("power", DEFAULT_POWER) : DEFAULT_POWER;
+        int explosionPower =  params.isPresent() ? params.get().getInt("explosionPower", DEFAULT_EXPLOSION_POWER) : DEFAULT_EXPLOSION_POWER;
+
         world.playSound(
                 null,
                 user.getX(),
@@ -54,9 +75,9 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
                 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (world instanceof ServerWorld serverWorld) {
-            FireballEntity entity = new FireballEntity(world, user, user.getRotationVector().multiply(POWER), EXPLOSION_POWER);
+            FireballEntity entity = new FireballEntity(world, user, user.getRotationVector(), explosionPower);
+            entity.accelerationPower = power;
             ProjectileEntity.spawn(entity, serverWorld, itemStack);
-
         }
         user.incrementStat(Stats.USED.getOrCreateStat(this));
         itemStack.decrementUnlessCreative(1, user);
