@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "## ",
+    "#S ",
+    "  #"
+  ],
+  "key": {
+    "#": "minecraft:string",
+    "S": "minecraft:slime_ball"
+  },
+  "result": {
+    "id": "minecraft:lead",
+    "count": 1
+  }
+}
