@@ -7,6 +7,7 @@
       "LoomScreenPatternLimitIncreaserMixin",
       "PlayerChainSpawnpointsMixin",
       "PlayerDropLifetimeIncreaserMixin",
+      "PlayerDropLoggerMixin",
       "PlayerDropMixin"
     ],
 	"injectors": {

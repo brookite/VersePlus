@@ -9,3 +9,6 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Loom pattern limit increased to 16
 - Reduced leaf litter in forest biome
 - Chained respawn points (buffered 32 spawnpoints)
+- Rebalanced lead craft
+- Player's drop NBT log (in world folder, `data/players_drop_graveyard.dat`)
+- Throwable fireball item
