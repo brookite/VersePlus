@@ -2,6 +2,7 @@ package io.github.brookite.mixin;
 
 import com.mojang.serialization.Codec;
 import io.github.brookite.interfaces.ChainedRespawnManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
@@ -24,9 +25,9 @@ import static io.github.brookite.VersePlusLimits.MAX_RESPAWNS;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManager {
-
     @Unique public ArrayDeque<ServerPlayerEntity.Respawn> respawns = new ArrayDeque<>();
     @Shadow private ServerPlayerEntity.Respawn respawn;
+    @Shadow private MinecraftServer server;
 
     @Shadow
     public abstract ServerWorld getWorld();
@@ -43,7 +44,8 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
     @Overwrite
     public @Nullable ServerPlayerEntity.Respawn getRespawn() {
         var toRemoveRespawns = this.respawns.stream()
-                .filter(r -> findRespawnPosition(getWorld(), r, false)
+                .filter(r -> !r.forced()
+                        && findRespawnPosition(this.server.getWorld(ServerPlayerEntity.Respawn.getDimension(r)), r, false)
                         .isEmpty()).toList();
 
         for (var invalidRespawn : toRemoveRespawns) {
@@ -51,7 +53,7 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
         }
 
         if (this.respawn != null
-                && findRespawnPosition(getWorld(), this.respawn, true).isEmpty()
+                && findRespawnPosition(this.server.getWorld(ServerPlayerEntity.Respawn.getDimension(this.respawn)), this.respawn, false).isEmpty()
                 && this.respawns.size() > 0) {
             this.respawn = this.respawns.removeFirst();
         }
@@ -80,7 +82,7 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
             respawns.remove(duplicate);
         }
 
-        if (!respawn.posEquals(this.respawn) && this.respawn != null) {
+        if (this.respawn != null && respawn != null && !respawn.posEquals(this.respawn)) {
             respawns.addFirst(this.respawn);
             if (respawns.size() > MAX_RESPAWNS) {
                 respawns.removeLast();
