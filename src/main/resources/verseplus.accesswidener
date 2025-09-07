@@ -2,3 +2,4 @@ accessWidener v2 named
 accessible class net/minecraft/server/network/ServerPlayerEntity$RespawnPos
 accessible method net/minecraft/server/network/ServerPlayerEntity$Respawn getDimension (Lnet/minecraft/server/network/ServerPlayerEntity$Respawn;)Lnet/minecraft/registry/RegistryKey;
 accessible field net/minecraft/entity/projectile/FireballEntity explosionPower I
+extendable method net/minecraft/entity/Entity discard ()V
