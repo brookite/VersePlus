@@ -5,6 +5,7 @@
 	"mixins": [
       "LoomScreenHandlerPatternLimitIncreaserMixin",
       "LoomScreenPatternLimitIncreaserMixin",
+      "MannequinNameMixin",
       "PlayerChainSpawnpointsMixin",
       "PlayerDropLifetimeIncreaserMixin",
       "PlayerDropLoggerMixin",

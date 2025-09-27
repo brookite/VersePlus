@@ -29,9 +29,6 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
     @Shadow private ServerPlayerEntity.Respawn respawn;
     @Shadow private MinecraftServer server;
 
-    @Shadow
-    public abstract ServerWorld getWorld();
-
     @Invoker("findRespawnPosition")
     static Optional<ServerPlayerEntity.RespawnPos> findRespawnPosition(ServerWorld world, ServerPlayerEntity.Respawn respawn, boolean bl) {
         throw new AssertionError(); // unreachable
