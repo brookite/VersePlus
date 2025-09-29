@@ -1,6 +1,7 @@
 package io.github.brookite.registries;
 
 import io.github.brookite.VersePlus;
+import io.github.brookite.items.FireEnderPearlItem;
 import io.github.brookite.items.ThrowableFireballItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -25,9 +26,14 @@ public class RegisterItems {
     public static final Item THROWABLE_FIREBALL_ITEM = register("throwable_fireball_item",
             ThrowableFireballItem::new, new Item.Settings().useCooldown(3)
     );
+    public static final Item FIRE_ENDER_PEARL_ITEM = register("fire_ender_pearl_item",
+            FireEnderPearlItem::new,
+            new Item.Settings().useCooldown(1));
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
                 entries.addAfter(Items.FIRE_CHARGE, RegisterItems.THROWABLE_FIREBALL_ITEM));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
+                entries.addAfter(Items.ENDER_PEARL, RegisterItems.FIRE_ENDER_PEARL_ITEM));
     }
 }

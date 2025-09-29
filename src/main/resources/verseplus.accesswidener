@@ -3,3 +3,5 @@ accessible class net/minecraft/server/network/ServerPlayerEntity$RespawnPos
 accessible method net/minecraft/server/network/ServerPlayerEntity$Respawn getDimension (Lnet/minecraft/server/network/ServerPlayerEntity$Respawn;)Lnet/minecraft/registry/RegistryKey;
 accessible field net/minecraft/entity/projectile/FireballEntity explosionPower I
 extendable method net/minecraft/entity/Entity discard ()V
+accessible method net/minecraft/entity/projectile/thrown/EnderPearlEntity playTeleportSound (Lnet/minecraft/world/World;Lnet/minecraft/util/math/Vec3d;)V
+extendable method net/minecraft/entity/projectile/thrown/EnderPearlEntity playTeleportSound (Lnet/minecraft/world/World;Lnet/minecraft/util/math/Vec3d;)V
