@@ -28,7 +28,7 @@ public class RegisterItems {
     );
     public static final Item FIRE_ENDER_PEARL_ITEM = register("fire_ender_pearl_item",
             FireEnderPearlItem::new,
-            new Item.Settings().useCooldown(1));
+            new Item.Settings().useCooldown(1).maxCount(16));
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
