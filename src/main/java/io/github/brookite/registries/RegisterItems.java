@@ -1,9 +1,11 @@
 package io.github.brookite.registries;
 
 import io.github.brookite.VersePlus;
+import io.github.brookite.items.ChargedRareEnderPearlItem;
 import io.github.brookite.items.FireEnderPearlItem;
 import io.github.brookite.items.ThrowableFireballItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.EnderPearlItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
@@ -30,11 +32,21 @@ public class RegisterItems {
     public static final Item FIRE_ENDER_PEARL_ITEM = register("fire_ender_pearl_item",
             FireEnderPearlItem::new,
             new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.RARE));
+    public static final Item RARE_ENDER_PEARL_ITEM = register("rare_ender_pearl_item",
+            EnderPearlItem::new,
+            new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.RARE));
+    public static final Item CHARGED_RARE_ENDER_PEARL_ITEM = register("charged_rare_ender_pearl_item",
+            ChargedRareEnderPearlItem::new,
+            new Item.Settings().useCooldown(60).maxCount(16).rarity(Rarity.RARE));
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
                 entries.addAfter(Items.FIRE_CHARGE, RegisterItems.THROWABLE_FIREBALL_ITEM));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
                 entries.addAfter(Items.ENDER_PEARL, RegisterItems.FIRE_ENDER_PEARL_ITEM));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
+                entries.addAfter(RegisterItems.FIRE_ENDER_PEARL_ITEM, RegisterItems.RARE_ENDER_PEARL_ITEM));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
+                entries.addAfter(RegisterItems.RARE_ENDER_PEARL_ITEM, RegisterItems.CHARGED_RARE_ENDER_PEARL_ITEM));
     }
 }
