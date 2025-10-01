@@ -12,6 +12,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 import java.util.function.Function;
 
@@ -28,7 +29,7 @@ public class RegisterItems {
     );
     public static final Item FIRE_ENDER_PEARL_ITEM = register("fire_ender_pearl_item",
             FireEnderPearlItem::new,
-            new Item.Settings().useCooldown(1).maxCount(16));
+            new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.RARE));
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->
