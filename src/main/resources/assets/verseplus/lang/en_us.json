@@ -1,4 +1,7 @@
 {
   "item.verseplus.throwable_fireball_item": "Throwable Fireball Charge",
-  "item.verseplus.fire_ender_pearl_item": "Fire Ender Pearl"
+  "item.verseplus.fire_ender_pearl_item": "Fire Ender Pearl",
+  "item.verseplus.rare_ender_pearl_item": "Rare Ender Pearl",
+  "item.verseplus.charged_rare_ender_pearl_item": "Charged Rare Ender Pearl",
+  "verseplus.rarepearl.transition": "You have been moved to the your respawn place"
 }

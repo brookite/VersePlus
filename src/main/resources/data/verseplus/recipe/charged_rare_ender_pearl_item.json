@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#S#",
+    "###"
+  ],
+  "key": {
+    "#": "minecraft:echo_shard",
+    "S": "verseplus:rare_ender_pearl_item"
+  },
+  "result": {
+    "id": "verseplus:charged_rare_ender_pearl_item",
+    "count": 1
+  }
+}
