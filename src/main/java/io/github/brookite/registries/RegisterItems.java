@@ -34,10 +34,10 @@ public class RegisterItems {
             new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.RARE));
     public static final Item RARE_ENDER_PEARL_ITEM = register("rare_ender_pearl_item",
             EnderPearlItem::new,
-            new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.RARE));
+            new Item.Settings().useCooldown(1).maxCount(16).rarity(Rarity.EPIC));
     public static final Item CHARGED_RARE_ENDER_PEARL_ITEM = register("charged_rare_ender_pearl_item",
             ChargedRareEnderPearlItem::new,
-            new Item.Settings().useCooldown(60).maxCount(16).rarity(Rarity.RARE));
+            new Item.Settings().useCooldown(15).maxCount(16).rarity(Rarity.EPIC));
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries ->

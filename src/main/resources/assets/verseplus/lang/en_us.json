@@ -3,5 +3,6 @@
   "item.verseplus.fire_ender_pearl_item": "Fire Ender Pearl",
   "item.verseplus.rare_ender_pearl_item": "Rare Ender Pearl",
   "item.verseplus.charged_rare_ender_pearl_item": "Charged Rare Ender Pearl",
-  "verseplus.rarepearl.transition": "You have been moved to the your respawn place"
+  "verseplus.rarepearl.transition": "You have been moved to the your respawn place",
+  "verseplus.rarepearl.transition_failed": "Currently, moving to the respawn location is not possible due to the hostiles around you"
 }
