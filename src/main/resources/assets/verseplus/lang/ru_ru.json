@@ -3,5 +3,6 @@
   "item.verseplus.fire_ender_pearl_item": "Огненный эндер-жемчуг",
   "item.verseplus.rare_ender_pearl_item": "Редкий эндер-жемчуг",
   "item.verseplus.charged_rare_ender_pearl_item": "Заряженный редкий эндер-жемчуг",
-  "verseplus.rarepearl.transition": "Вы переместились на место вашего возрождения"
+  "verseplus.rarepearl.transition": "Вы переместились на место вашего возрождения",
+  "verseplus.rarepearl.transition_failed": "В настоящее время перемещение на место возрождения невозможно из-за опасностей вокруг вас"
 }
