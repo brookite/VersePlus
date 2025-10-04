@@ -6,11 +6,17 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.condition.RandomChanceLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -19,6 +25,8 @@ import net.minecraft.village.TradedItem;
 import net.minecraft.world.gen.GenerationStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class VersePlus implements ModInitializer {
 	public static final String MOD_ID = "verseplus";
@@ -41,6 +49,35 @@ public class VersePlus implements ModInitializer {
                             RegistryKey.of(RegistryKeys.PLACED_FEATURE,
                             Identifier.of(MOD_ID,"trees_birch_and_oak")));
                 }
+        );
+    }
+
+    private void extendVanillaLootTables(Map<Identifier, LootPool> pools) {
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
+            var lootTable = resourceManager.getValue();
+            for (var pool : pools.entrySet()) {
+                if (lootTable.equals(pool.getKey()) && id.isBuiltin()) {
+                    lootManager.pool(pool.getValue());
+                }
+            }
+        });
+    }
+
+    private Map<Identifier, LootPool> getNewLoots() {
+        var rarePearlStrongholdLoot = LootPool.builder()
+                .rolls(ConstantLootNumberProvider.create(1))
+                .with(ItemEntry.builder(RegisterItems.RARE_ENDER_PEARL_ITEM))
+                .conditionally(RandomChanceLootCondition.builder(VersePlusChances.RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT)).build();
+
+        var piglinPool = LootPool.builder()
+                .rolls(ConstantLootNumberProvider.create(1))
+                .with(ItemEntry.builder(RegisterItems.RARE_ENDER_PEARL_ITEM))
+                .conditionally(RandomChanceLootCondition.builder(VersePlusChances.RARE_ENDER_PEARL_BARTER_CHANCE)).build();
+
+        return Map.of(
+                LootTables.STRONGHOLD_CROSSING_CHEST.getValue(), rarePearlStrongholdLoot,
+                LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue(), rarePearlStrongholdLoot,
+                LootTables.PIGLIN_BARTERING_GAMEPLAY.getValue(), piglinPool
         );
     }
 
@@ -67,6 +104,7 @@ public class VersePlus implements ModInitializer {
     @Override
 	public void onInitialize() {
         changeForestTrees();
+        extendVanillaLootTables(getNewLoots());
         extendWanderingTraderOffers();
         RegisterItems.initialize();
         RegisterEntities.initialize();
