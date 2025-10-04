@@ -43,6 +43,7 @@ public class EndermanDropMixin extends HostileEntity {
 
                 if (itemId.equals(Identifier.ofVanilla("golden_sword"))
                     && EnchantmentHelper.getLevel(registryManager.getEntryOrThrow(Enchantments.LOOTING), attackerItemStack) == 0
+                        && world.getDimensionEntry().matchesId(Identifier.ofVanilla("overworld"))
                         && EnchantmentHelper.getLevel(registryManager.getEntryOrThrow(Enchantments.KNOCKBACK), attackerItemStack) > 0
                         && world.getRandom().nextDouble() < VersePlusChances.ENDERMAN_RARE_ENDER_PEARL_LOOT
                 ) {
