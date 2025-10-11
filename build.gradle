@@ -67,7 +67,9 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${inputs.properties.archivesName}"}
 	}
+}
 
+remapJar {
     archiveBaseName = project.name
     archiveClassifier = "mc${project.minecraft_version}"
     archiveVersion = project.version
