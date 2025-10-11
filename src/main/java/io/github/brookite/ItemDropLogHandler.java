@@ -63,12 +63,12 @@ public class ItemDropLogHandler extends PersistentState {
     public Pair<DropEntry, Boolean> findOrCreateEntry(long seconds) {
         for (DropEntry entry : drops) {
             if (entry.timestamp == (seconds - seconds % LOG_SLICE_TIME)) {
-                return new Pair(entry, true);
+                return new Pair<>(entry, true);
             }
         }
         long timestamp = System.currentTimeMillis() / 1000;
         long interval = timestamp - timestamp % LOG_SLICE_TIME;
-        return new Pair(new DropEntry(interval, new ArrayList<>()), false);
+        return new Pair<>(new DropEntry(interval, new ArrayList<>()), false);
     }
 
     public List<DropEntry> getDrops() {
