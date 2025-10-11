@@ -67,6 +67,10 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${inputs.properties.archivesName}"}
 	}
+
+    archiveBaseName = project.name
+    archiveClassifier = "mc${project.minecraft_version}"
+    archiveVersion = project.version
 }
 
 // configure the maven publication
@@ -85,4 +89,9 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked"
 }
