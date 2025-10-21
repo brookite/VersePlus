@@ -1,9 +1,9 @@
-package io.github.brookite.registries;
+package io.github.brookite.verseplus.registries;
 
-import io.github.brookite.VersePlus;
-import io.github.brookite.items.ChargedRareEnderPearlItem;
-import io.github.brookite.items.FireEnderPearlItem;
-import io.github.brookite.items.ThrowableFireballItem;
+import io.github.brookite.verseplus.VersePlus;
+import io.github.brookite.verseplus.items.ChargedRareEnderPearlItem;
+import io.github.brookite.verseplus.items.FireEnderPearlItem;
+import io.github.brookite.verseplus.items.ThrowableFireballItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.EnderPearlItem;
 import net.minecraft.item.Item;

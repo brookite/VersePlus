@@ -1,7 +1,7 @@
-package io.github.brookite;
+package io.github.brookite.verseplus;
 
-import io.github.brookite.registries.RegisterEntities;
-import io.github.brookite.registries.RegisterItems;
+import io.github.brookite.verseplus.registries.RegisterEntities;
+import io.github.brookite.verseplus.registries.RegisterItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;

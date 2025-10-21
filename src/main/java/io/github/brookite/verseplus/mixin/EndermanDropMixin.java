@@ -1,7 +1,7 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
-import io.github.brookite.VersePlusChances;
-import io.github.brookite.registries.RegisterItems;
+import io.github.brookite.verseplus.VersePlusChances;
+import io.github.brookite.verseplus.registries.RegisterItems;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;

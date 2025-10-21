@@ -1,4 +1,4 @@
-package io.github.brookite.items;
+package io.github.brookite.verseplus.items;
 
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;

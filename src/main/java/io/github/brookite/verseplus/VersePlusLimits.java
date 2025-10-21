@@ -1,4 +1,4 @@
-package io.github.brookite;
+package io.github.brookite.verseplus;
 
 public class VersePlusLimits {
     public static final int MAX_RESPAWNS = 32;

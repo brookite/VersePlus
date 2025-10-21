@@ -1,4 +1,4 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.type.BannerPatternsComponent;
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import static io.github.brookite.VersePlusLimits.MAX_LOOM_PATTERNS;
+import static io.github.brookite.verseplus.VersePlusLimits.MAX_LOOM_PATTERNS;
 
 @Mixin(LoomScreenHandler.class)
 public class LoomScreenHandlerPatternLimitIncreaserMixin {

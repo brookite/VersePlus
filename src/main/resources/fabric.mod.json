@@ -17,10 +17,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"io.github.brookite.VersePlus"
+          "io.github.brookite.verseplus.VersePlus"
 		],
 		"fabric-datagen": [
-			"io.github.brookite.VersePlusDataGenerator"
+          "io.github.brookite.verseplus.VersePlusDataGenerator"
 		]
 	},
 	"mixins": [

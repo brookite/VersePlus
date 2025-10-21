@@ -1,4 +1,4 @@
-package io.github.brookite.items;
+package io.github.brookite.verseplus.items;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EntityType;

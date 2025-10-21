@@ -1,6 +1,6 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
-import io.github.brookite.ItemDropLogHandler;
+import io.github.brookite.verseplus.ItemDropLogHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,4 +1,4 @@
-package io.github.brookite.interfaces;
+package io.github.brookite.verseplus.interfaces;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 

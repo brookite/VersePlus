@@ -1,4 +1,4 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.Entity;

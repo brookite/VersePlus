@@ -1,4 +1,4 @@
-package io.github.brookite.entities;
+package io.github.brookite.verseplus.entities;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

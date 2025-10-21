@@ -1,4 +1,4 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
 import net.minecraft.entity.ItemEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static io.github.brookite.VersePlusLimits.PLAYER_DROP_LIFETIME_MINUTES;
+import static io.github.brookite.verseplus.VersePlusLimits.PLAYER_DROP_LIFETIME_MINUTES;
 
 @Mixin(ItemEntity.class)
 public class PlayerDropLifetimeIncreaserMixin {

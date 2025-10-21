@@ -1,6 +1,6 @@
-package io.github.brookite.items;
+package io.github.brookite.verseplus.items;
 
-import io.github.brookite.entities.FireEnderPearlEntity;
+import io.github.brookite.verseplus.entities.FireEnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.EnderPearlItem;

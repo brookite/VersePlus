@@ -1,6 +1,6 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
-import io.github.brookite.VersePlus;
+import io.github.brookite.verseplus.VersePlus;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;

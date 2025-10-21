@@ -1,7 +1,7 @@
-package io.github.brookite.mixin;
+package io.github.brookite.verseplus.mixin;
 
 import com.mojang.serialization.Codec;
-import io.github.brookite.interfaces.ChainedRespawnManager;
+import io.github.brookite.verseplus.interfaces.ChainedRespawnManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -21,7 +21,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
 
-import static io.github.brookite.VersePlusLimits.MAX_RESPAWNS;
+import static io.github.brookite.verseplus.VersePlusLimits.MAX_RESPAWNS;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManager {

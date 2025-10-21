@@ -1,7 +1,7 @@
-package io.github.brookite.registries;
+package io.github.brookite.verseplus.registries;
 
-import io.github.brookite.VersePlus;
-import io.github.brookite.entities.FireEnderPearlEntity;
+import io.github.brookite.verseplus.VersePlus;
+import io.github.brookite.verseplus.entities.FireEnderPearlEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
