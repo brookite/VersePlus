@@ -10,7 +10,9 @@
     "PlayerChainSpawnpointsMixin",
     "PlayerDropLifetimeIncreaserMixin",
     "PlayerDropLoggerMixin",
-    "PlayerDropMixin"
+    "PlayerDropMixin",
+    "SpiderRendererMixin",
+    "SpiderSizesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_echo_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:echo_shard"],
+            "count": {
+              "min": 8
+            }
+          }
+        ]
+      }
+    },
+    "has_rare_ender_pearl": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["verseplus:rare_ender_pearl_item"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["has_echo_shard", "has_rare_ender_pearl"]
+  ],
+  "rewards": {
+    "recipes": [
+      "verseplus:charged_rare_ender_pearl_item"
+    ]
+  }
+}

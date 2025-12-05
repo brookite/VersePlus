@@ -19,6 +19,9 @@
 		"main": [
           "io.github.brookite.verseplus.VersePlus"
 		],
+        "client": [
+          "io.github.brookite.verseplus.VersePlusClient"
+        ],
 		"fabric-datagen": [
           "io.github.brookite.verseplus.VersePlusDataGenerator"
 		]

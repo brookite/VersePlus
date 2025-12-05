@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fire_charge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:fire_charge"]
+          }
+        ]
+      }
+    },
+    "has_wind_charge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:wind_charge"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["has_fire_charge", "has_wind_charge"]
+  ],
+  "rewards": {
+    "recipes": [
+      "verseplus:throwable_fireball_item"
+    ]
+  }
+}

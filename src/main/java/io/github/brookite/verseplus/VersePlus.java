@@ -69,15 +69,9 @@ public class VersePlus implements ModInitializer {
                 .with(ItemEntry.builder(RegisterItems.RARE_ENDER_PEARL_ITEM))
                 .conditionally(RandomChanceLootCondition.builder(VersePlusChances.RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT)).build();
 
-        var piglinPool = LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(1))
-                .with(ItemEntry.builder(RegisterItems.RARE_ENDER_PEARL_ITEM))
-                .conditionally(RandomChanceLootCondition.builder(VersePlusChances.RARE_ENDER_PEARL_BARTER_CHANCE)).build();
-
         return Map.of(
                 LootTables.STRONGHOLD_CROSSING_CHEST.getValue(), rarePearlStrongholdLoot,
-                LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue(), rarePearlStrongholdLoot,
-                LootTables.PIGLIN_BARTERING_GAMEPLAY.getValue(), piglinPool
+                LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue(), rarePearlStrongholdLoot
         );
     }
 
@@ -85,7 +79,7 @@ public class VersePlus implements ModInitializer {
         TradeOfferHelper.registerWanderingTraderOffers(builder -> {
             builder.addOffersToPool(
                     TradeOfferHelper.WanderingTraderOffersBuilder.SELL_SPECIAL_ITEMS_POOL,
-                    (entity, random) -> {
+                    (world, entity, random) -> {
                         if (random.nextDouble() < VersePlusChances.RARE_ENDER_PEARL_TRADE_CHANCE) {
                             return new TradeOffer(
                                     new TradedItem(Items.EMERALD, 15),
