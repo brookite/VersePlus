@@ -12,6 +12,8 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -76,5 +78,17 @@ public class SpiderSizesMixin extends HostileEntity implements SizeableSpider {
             }
         }
         return super.damage(world, source, amount);
+    }
+
+    @Override
+    protected void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        view.put("type", SpiderVariant.CODEC, this.getVariant());
+    }
+
+    @Override
+    protected void readCustomData(ReadView view) {
+        super.readCustomData(view);
+        this.setVariant(view.read("type", SpiderVariant.CODEC).orElse(SpiderVariant.DEFAULT));
     }
 }
