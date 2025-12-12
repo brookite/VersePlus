@@ -35,11 +35,13 @@ public abstract class SpiderRendererMixin<T extends SpiderEntity> extends MobEnt
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(EntityRendererFactory.Context context, CallbackInfo ci) {
-        this.smallModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_SMALL_LAYER));
-        this.mediumModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_MEDIUM_LAYER));
-        this.tinyModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_TINY_LAYER));
-        this.largeModel = new SpiderEntityModel(context.getPart(EntityModelLayers.SPIDER));
-        this.model = this.largeModel;
+        if (this.getClass().equals(SpiderEntityRenderer.class)) {
+            this.smallModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_SMALL_LAYER));
+            this.mediumModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_MEDIUM_LAYER));
+            this.tinyModel = new SpiderEntityModel(context.getPart(CustomEntityModelLayers.SPIDER_TINY_LAYER));
+            this.largeModel = new SpiderEntityModel(context.getPart(EntityModelLayers.SPIDER));
+            this.model = this.largeModel;
+        }
     }
 
     @Inject(method= "updateRenderState(Lnet/minecraft/entity/mob/SpiderEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at=@At("TAIL"))
@@ -63,12 +65,14 @@ public abstract class SpiderRendererMixin<T extends SpiderEntity> extends MobEnt
     @Override
     public void render(LivingEntityRenderState renderState, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
         SizedSpiderEntityRenderState entityRenderState = (SizedSpiderEntityRenderState)renderState;
-        this.model = switch (entityRenderState.variant) {
-            case SMALL -> this.smallModel;
-            case TINY -> this.tinyModel;
-            case MEDIUM -> this.mediumModel;
-            case LARGE -> this.largeModel;
-        };
+        if (this.getClass().equals(SpiderEntityRenderer.class)) {
+            this.model = switch (entityRenderState.variant) {
+                case SMALL -> this.smallModel;
+                case TINY -> this.tinyModel;
+                case MEDIUM -> this.mediumModel;
+                case LARGE -> this.largeModel;
+            };
+        }
         super.render(renderState, matrices, queue, cameraState);
     }
 
