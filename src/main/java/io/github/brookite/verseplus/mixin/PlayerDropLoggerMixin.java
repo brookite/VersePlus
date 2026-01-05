@@ -21,7 +21,9 @@ public class PlayerDropLoggerMixin {
     @Inject(at = @At("HEAD"), method = "discard()V")
     public void discard(CallbackInfo ci) {
         if (((Object)this) instanceof ItemEntity itemEntity
-                && (itemEntity.getOwner() instanceof PlayerEntity || itemEntity.getFireTicks() > 0)
+                && (itemEntity.getOwner() instanceof PlayerEntity ||
+                    itemEntity.getFireTicks() > 0 ||
+                    itemEntity.health < 0)
                 && world instanceof ServerWorld serverWorld) {
             var logger = ItemDropLogHandler.get(serverWorld);
             ItemStack stack = itemEntity.getStack();
