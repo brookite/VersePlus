@@ -19,7 +19,7 @@ public class RegisterPotions {
                         StatusEffects.INVISIBILITY,
                         19200,
                         1,
-                        true,
+                        false,
                         false,
                         true
                 )
@@ -36,7 +36,7 @@ public class RegisterPotions {
 
     public static void initialize() {
         FabricBrewingRecipeRegistryBuilder.BUILD.register(builder -> {
-            builder.registerPotionRecipe(Potions.INVISIBILITY, Items.GLOWSTONE_DUST, TRUE_INVISIBILITY);
+            builder.registerPotionRecipe(Potions.LONG_INVISIBILITY, Items.GLOWSTONE_DUST, TRUE_INVISIBILITY);
         });
     }
 
