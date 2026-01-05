@@ -17,6 +17,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
         Optional<NbtCompound> params = getCustomParameters(stack);
+
         FireballEntity fireballEntity = new FireballEntity(EntityType.FIREBALL, world);
         fireballEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
         fireballEntity.setVelocity(direction.getDoubleVector());
@@ -64,6 +66,12 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
         double power = params.isPresent() ? params.get().getDouble("power", DEFAULT_POWER) : DEFAULT_POWER;
         int explosionPower =  params.isPresent() ? params.get().getInt("explosionPower", DEFAULT_EXPLOSION_POWER) : DEFAULT_EXPLOSION_POWER;
 
+        Vec3d look = user.getRotationVec(1.0F);
+        double spawnDistance = 1.5;
+        double x = user.getX() + look.x * spawnDistance;
+        double y = user.getEyeY() + look.y * spawnDistance;
+        double z = user.getZ() + look.z * spawnDistance;
+
         world.playSound(
                 null,
                 user.getX(),
@@ -75,8 +83,9 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
                 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (world instanceof ServerWorld serverWorld) {
-            FireballEntity entity = new FireballEntity(world, user, user.getRotationVector(), explosionPower);
-            entity.accelerationPower = power;
+            FireballEntity entity = new FireballEntity(world, user, look, explosionPower);
+            entity.setPosition(x, y, z);
+            entity.accelerationPower = Math.max(power, 0.05);;
             ProjectileEntity.spawn(entity, serverWorld, itemStack);
         }
         user.incrementStat(Stats.USED.getOrCreateStat(this));
