@@ -55,7 +55,10 @@ public class SpiderSizesMixin extends HostileEntity implements SizeableSpider {
         if (spider.getHealth() - amount <= 0) {
             Difficulty difficulty = world.getDifficulty();
 
-            if (getVariant() == SpiderVariant.LARGE && difficulty == Difficulty.HARD && world.random.nextDouble() < PREGNANT_SPIDER_CHANCE) {
+            if (getVariant() == SpiderVariant.LARGE && difficulty == Difficulty.HARD
+                    && world.random.nextDouble() < PREGNANT_SPIDER_CHANCE
+                    && spider.getClass().equals(SpiderEntity.class) // only for spiders (not cave spiders)
+            ) {
                 int count = world.getRandom().nextBetween(3, 11);
                 for (int i = 0; i < count; i++) {
                     SpiderEntity baby = new SpiderEntity(EntityType.SPIDER, world);
