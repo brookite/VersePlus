@@ -2,6 +2,7 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterItems;
+import io.github.brookite.verseplus.registries.RegisterPotions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -101,6 +102,7 @@ public class VersePlus implements ModInitializer {
         extendVanillaLootTables(getNewLoots());
         extendWanderingTraderOffers();
         RegisterItems.initialize();
+        RegisterPotions.initialize();
         RegisterEntities.initialize();
         DispenserBlock.registerBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM,
                 new ProjectileDispenserBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));

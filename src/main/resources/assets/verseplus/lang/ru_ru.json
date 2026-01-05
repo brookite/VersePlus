@@ -3,6 +3,9 @@
   "item.verseplus.fire_ender_pearl_item": "Огненный эндер-жемчуг",
   "item.verseplus.rare_ender_pearl_item": "Редкий эндер-жемчуг",
   "item.verseplus.charged_rare_ender_pearl_item": "Заряженный редкий эндер-жемчуг",
+  "item.minecraft.potion.effect.true_invisibility": "Зелье невидимости",
+  "item.minecraft.splash_potion.effect.true_invisibility": "Взрывное зелье невидимости",
+  "item.minecraft.lingering_potion.effect.true_invisibility": "Взвешенное зелье невидимости",
   "verseplus.rarepearl.transition": "Вы переместились на место вашего возрождения",
   "verseplus.rarepearl.transition_failed": "В настоящее время перемещение на место возрождения невозможно из-за опасностей вокруг вас"
 }

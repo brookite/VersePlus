@@ -12,7 +12,8 @@
     "PlayerDropLoggerMixin",
     "PlayerDropMixin",
     "SpiderRendererMixin",
-    "SpiderSizesMixin"
+    "SpiderSizesMixin",
+    "TrueInvisibilityEffectMixin"
   ],
   "injectors": {
     "defaultRequire": 1
