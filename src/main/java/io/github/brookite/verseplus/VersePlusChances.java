@@ -7,5 +7,7 @@ public class VersePlusChances {
     public static final float RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT = 0.07f;
     public static final float RARE_ENDER_PEARL_TRADE_CHANCE = 0.04f;
 
-    public static final float PREGNANT_SPIDER_CHANCE = 0.12f;
+    public static final float PREGNANT_SPIDER_CHANCE = 0.03f;
+    public static final int BABY_SPIDER_MAX_COUNT = 8;
+    public static final int BABY_SPIDER_MIN_COUNT = 3;
 }

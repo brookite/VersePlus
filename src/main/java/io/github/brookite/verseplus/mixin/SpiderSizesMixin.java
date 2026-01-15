@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static io.github.brookite.verseplus.VersePlusChances.PREGNANT_SPIDER_CHANCE;
+import static io.github.brookite.verseplus.VersePlusChances.*;
 
 
 @Mixin(SpiderEntity.class)
@@ -59,7 +59,7 @@ public class SpiderSizesMixin extends HostileEntity implements SizeableSpider {
                     && world.random.nextDouble() < PREGNANT_SPIDER_CHANCE
                     && spider.getClass().equals(SpiderEntity.class) // only for spiders (not cave spiders)
             ) {
-                int count = world.getRandom().nextBetween(3, 11);
+                int count = world.getRandom().nextBetween(BABY_SPIDER_MIN_COUNT, BABY_SPIDER_MAX_COUNT);
                 for (int i = 0; i < count; i++) {
                     SpiderEntity baby = new SpiderEntity(EntityType.SPIDER, world);
                     SpiderVariant variant = SpiderVariant.values()[world.random.nextBetween(0, 2)];
