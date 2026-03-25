@@ -1,9 +1,9 @@
 package io.github.brookite.verseplus.mixin;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,19 +13,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TrueInvisibilityEffectMixin {
 
     @Inject(
-            method = "addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;Lnet/minecraft/entity/Entity;)Z",
+            method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
             at = @At("HEAD"),
             cancellable = true
     )
     private void onAddStatusEffect(
-            StatusEffectInstance effect, Entity source, CallbackInfoReturnable<Boolean> cir
+            MobEffectInstance effect, Entity source, CallbackInfoReturnable<Boolean> cir
     ) {
-        if (effect.getEffectType() == StatusEffects.INVISIBILITY
+        if (effect.getEffect() == MobEffects.INVISIBILITY
                 && effect.getAmplifier() >= 1
-                && effect.shouldShowParticles()) {
+                && effect.isVisible()) {
 
-            StatusEffectInstance noParticles = new StatusEffectInstance(
-                    effect.getEffectType(),
+            MobEffectInstance noParticles = new MobEffectInstance(
+                    effect.getEffect(),
                     effect.getDuration(),
                     effect.getAmplifier(),
                     effect.isAmbient(),
@@ -34,7 +34,7 @@ public abstract class TrueInvisibilityEffectMixin {
             );
 
             LivingEntity self = (LivingEntity) (Object) this;
-            cir.setReturnValue(self.addStatusEffect(noParticles, source));
+            cir.setReturnValue(self.addEffect(noParticles, source));
         }
     }
 }

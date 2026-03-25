@@ -1,6 +1,6 @@
 package io.github.brookite.verseplus.mixin;
 
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,10 +12,10 @@ import static io.github.brookite.verseplus.VersePlusLimits.PLAYER_DROP_LIFETIME_
 @Mixin(ItemEntity.class)
 public class PlayerDropLifetimeIncreaserMixin {
     @Shadow
-    private int itemAge;
+    private int age;
 
-    @Inject(at = @At("TAIL"), method = "setCovetedItem()V")
+    @Inject(at = @At("TAIL"), method = "setExtendedLifetime()V")
 	private void init(CallbackInfo info) {
-		this.itemAge = -(1200 * PLAYER_DROP_LIFETIME_MINUTES - 6000); // 25 minutes (from -24K to 0 and to 6K);
+		this.age = -(1200 * PLAYER_DROP_LIFETIME_MINUTES - 6000); // 25 minutes (from -24K to 0 and to 6K);
 	}
 }

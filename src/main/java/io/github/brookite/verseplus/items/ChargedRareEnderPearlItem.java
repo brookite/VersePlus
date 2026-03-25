@@ -1,53 +1,53 @@
 package io.github.brookite.verseplus.items;
 
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.EnderPearlItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnderpearlItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class ChargedRareEnderPearlItem extends EnderPearlItem {
-    public ChargedRareEnderPearlItem(Settings settings) {
+public class ChargedRareEnderPearlItem extends EnderpearlItem {
+    public ChargedRareEnderPearlItem(Properties settings) {
         super(settings);
     }
 
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (user instanceof ServerPlayerEntity entity) {
-            var vec3d = Vec3d.ofBottomCenter(entity.getBlockPos());
-            List<HostileEntity> list = entity.getEntityWorld().getEntitiesByClass(HostileEntity.class,
-                    new Box(vec3d.getX() - (double)8.0F, vec3d.getY() - (double)5.0F,
-                            vec3d.getZ() - (double)8.0F,
-                            vec3d.getX() + (double)8.0F, vec3d.getY() + (double)5.0F,
-                            vec3d.getZ() + (double)8.0F),
-                    (e) -> e.isAngryAt(entity.getEntityWorld(), entity));
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        if (user instanceof ServerPlayer entity) {
+            var vec3d = Vec3.atBottomCenterOf(entity.blockPosition());
+            List<Monster> list = entity.level().getEntitiesOfClass(Monster.class,
+                    new AABB(vec3d.x() - (double)8.0F, vec3d.y() - (double)5.0F,
+                            vec3d.z() - (double)8.0F,
+                            vec3d.x() + (double)8.0F, vec3d.y() + (double)5.0F,
+                            vec3d.z() + (double)8.0F),
+                    (e) -> e.isPreventingPlayerRest(entity.level(), entity));
 
             if (!list.isEmpty() && !entity.isCreative()) {
-                entity.sendMessage(Text.translatable("verseplus.rarepearl.transition_failed"));
-                return ActionResult.FAIL;
+                entity.sendSystemMessage(Component.translatable("verseplus.rarepearl.transition_failed"));
+                return InteractionResult.FAIL;
             }
 
-            TeleportTarget.PostDimensionTransition transition = (e) -> {
-                entity.sendMessage(Text.translatable("verseplus.rarepearl.transition"), false);
+            TeleportTransition.PostTeleportTransition transition = (e) -> {
+                entity.sendOverlayMessage(Component.translatable("verseplus.rarepearl.transition"));
             };
-            TeleportTarget target = entity.getRespawnTarget(false, transition);
-            entity.teleportTo(target);
+            TeleportTransition target = entity.findRespawnPositionAndUseSpawnBlock(false, transition);
+            entity.teleport(target);
         }
-        itemStack.decrementUnlessCreative(1, user);
-        return ActionResult.SUCCESS;
+        itemStack.consume(1, user);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 }

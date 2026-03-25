@@ -2,30 +2,24 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterItems;
-import io.github.brookite.verseplus.registries.RegisterPlacedFeatures;
 import io.github.brookite.verseplus.registries.RegisterPotions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradedItem;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,36 +30,39 @@ public class VersePlus implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     private void changeForestTrees() {
-        BiomeModifications.create(Identifier.of(MOD_ID, "changed_forest_trees")).add(
+        BiomeModifications.create(Identifier.fromNamespaceAndPath(MOD_ID, "changed_forest_trees")).add(
                 ModificationPhase.REPLACEMENTS, BiomeSelectors.foundInOverworld()
                         .and((context) -> context
                                 .getBiomeKey()
-                                .getValue()
+                                .identifier()
                                 .getPath()
                                 .equals("forest")
                         ),
                 (selection, context) -> {
-                    context.getGenerationSettings().removeFeature(RegistryKey.of(RegistryKeys.PLACED_FEATURE,
-                            Identifier.ofVanilla("trees_birch_and_oak_leaf_litter")));
+                    context.getGenerationSettings().removeFeature(ResourceKey.create(Registries.PLACED_FEATURE,
+                            Identifier.withDefaultNamespace("trees_birch_and_oak_leaf_litter")));
 
-                    context.getGenerationSettings().addFeature(GenerationStep.Feature.VEGETAL_DECORATION,
-                            RegistryKey.of(RegistryKeys.PLACED_FEATURE,
-                            Identifier.of(MOD_ID,"trees_birch_and_oak")));
+                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
+                            ResourceKey.create(Registries.PLACED_FEATURE,
+                            Identifier.fromNamespaceAndPath(MOD_ID,"trees_birch_and_oak")));
                 }
         );
     }
 
     private void addOceanSponges() {
         BiomeModifications.addFeature(
-                BiomeSelectors.includeByKey(BiomeKeys.WARM_OCEAN),
-                GenerationStep.Feature.VEGETAL_DECORATION,
-                RegisterPlacedFeatures.WET_SPONGE_PILE_PLACED_KEY
+                BiomeSelectors.includeByKey(Biomes.LUKEWARM_OCEAN),
+                GenerationStep.Decoration.VEGETAL_DECORATION,
+                ResourceKey.create(
+                        Registries.PLACED_FEATURE,
+                        Identifier.fromNamespaceAndPath("verseplus", "wet_sponge_pile_placed")
+                )
         );
     }
 
     private void extendVanillaLootTables(Map<Identifier, LootPool> pools) {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
-            var lootTable = resourceManager.getValue();
+            var lootTable = resourceManager.identifier();
             for (var pool : pools.entrySet()) {
                 if (lootTable.equals(pool.getKey()) && id.isBuiltin()) {
                     lootManager.pool(pool.getValue());
@@ -75,36 +72,17 @@ public class VersePlus implements ModInitializer {
     }
 
     private Map<Identifier, LootPool> getNewLoots() {
-        var rarePearlStrongholdLoot = LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(1))
-                .with(ItemEntry.builder(RegisterItems.RARE_ENDER_PEARL_ITEM))
-                .conditionally(RandomChanceLootCondition.builder(VersePlusChances.RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT)).build();
+        var rarePearlStrongholdLoot = LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1))
+                .add(LootItem.lootTableItem(RegisterItems.RARE_ENDER_PEARL_ITEM))
+                .when(LootItemRandomChanceCondition.randomChance(VersePlusChances.RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT)).build();
 
         return Map.of(
-                LootTables.STRONGHOLD_CROSSING_CHEST.getValue(), rarePearlStrongholdLoot,
-                LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue(), rarePearlStrongholdLoot
+                BuiltInLootTables.STRONGHOLD_CROSSING.identifier(), rarePearlStrongholdLoot,
+                BuiltInLootTables.STRONGHOLD_CORRIDOR.identifier(), rarePearlStrongholdLoot
         );
     }
 
-    private void extendWanderingTraderOffers() {
-        TradeOfferHelper.registerWanderingTraderOffers(builder -> {
-            builder.addOffersToPool(
-                    TradeOfferHelper.WanderingTraderOffersBuilder.SELL_SPECIAL_ITEMS_POOL,
-                    (world, entity, random) -> {
-                        if (random.nextDouble() < VersePlusChances.RARE_ENDER_PEARL_TRADE_CHANCE) {
-                            return new TradeOffer(
-                                    new TradedItem(Items.EMERALD, 15),
-                                    new ItemStack(RegisterItems.RARE_ENDER_PEARL_ITEM),
-                                    5, // maxUses
-                                    8,  // xp
-                                    0.2f // price multiplier
-                            );
-                        }
-                        return null;
-                    }
-            );
-        });
-    }
 
     @Override
 	public void onInitialize() {
@@ -112,13 +90,11 @@ public class VersePlus implements ModInitializer {
         RegisterPotions.initialize();
         RegisterEntities.initialize();
         DispenserBlock.registerBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM,
-                new ProjectileDispenserBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));
+                new ProjectileDispenseBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));
 
         extendVanillaLootTables(getNewLoots());
-        extendWanderingTraderOffers();
 
         changeForestTrees();
         addOceanSponges();
-
     }
 }

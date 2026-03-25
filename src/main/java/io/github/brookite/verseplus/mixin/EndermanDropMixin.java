@@ -2,55 +2,55 @@ package io.github.brookite.verseplus.mixin;
 
 import io.github.brookite.verseplus.VersePlusChances;
 import io.github.brookite.verseplus.registries.RegisterItems;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.EndermanEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 
 
-@Mixin(EndermanEntity.class)
-public class EndermanDropMixin extends HostileEntity {
-    protected EndermanDropMixin(EntityType<? extends HostileEntity> entityType, World world) {
+@Mixin(EnderMan.class)
+public class EndermanDropMixin extends Monster {
+    protected EndermanDropMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public void dropLoot(ServerWorld world, DamageSource damageSource,
-                         boolean causedByPlayer, RegistryKey<LootTable> lootTableKey) {
-        this.generateLoot(world, damageSource, causedByPlayer, lootTableKey, (stack) -> {
-            if (Registries.ITEM.getId(stack.getItem()).equals(Identifier.ofVanilla("ender_pearl"))
-                    && world.getDimensionEntry().matchesId(Identifier.ofVanilla("the_nether"))
+    public void dropFromLootTable(ServerLevel world, DamageSource damageSource,
+                         boolean causedByPlayer, ResourceKey<LootTable> lootTableKey) {
+        this.dropFromLootTable(world, damageSource, causedByPlayer, lootTableKey, (stack) -> {
+            if (BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(Identifier.withDefaultNamespace("ender_pearl"))
+                    && world.dimensionTypeRegistration().is(Identifier.withDefaultNamespace("the_nether"))
                     && world.getRandom().nextDouble() < VersePlusChances.ENDERMAN_FIRE_ENDER_PEARL_LOOT
             ) {
                 stack = new ItemStack(RegisterItems.FIRE_ENDER_PEARL_ITEM, 1);
             }
-            if (damageSource.getAttacker() instanceof LivingEntity livingEntity) {
-                var attackerItemStack = livingEntity.getMainHandStack();
-                var itemId = Registries.ITEM.getId(attackerItemStack.getItem());
+            if (damageSource.getEntity() instanceof LivingEntity livingEntity) {
+                var attackerItemStack = livingEntity.getMainHandItem();
+                var itemId = BuiltInRegistries.ITEM.getKey(attackerItemStack.getItem());
 
-                var registryManager = world.getRegistryManager();
+                var registryManager = world.registryAccess();
 
-                if (itemId.equals(Identifier.ofVanilla("golden_sword"))
-                    && EnchantmentHelper.getLevel(registryManager.getEntryOrThrow(Enchantments.LOOTING), attackerItemStack) == 0
-                        && world.getDimensionEntry().matchesId(Identifier.ofVanilla("overworld"))
-                        && EnchantmentHelper.getLevel(registryManager.getEntryOrThrow(Enchantments.KNOCKBACK), attackerItemStack) > 0
+                if (itemId.equals(Identifier.withDefaultNamespace("golden_sword"))
+                    && EnchantmentHelper.getItemEnchantmentLevel(registryManager.getOrThrow(Enchantments.LOOTING), attackerItemStack) == 0
+                        && world.dimensionTypeRegistration().is(Identifier.withDefaultNamespace("overworld"))
+                        && EnchantmentHelper.getItemEnchantmentLevel(registryManager.getOrThrow(Enchantments.KNOCKBACK), attackerItemStack) > 0
                         && world.getRandom().nextDouble() < VersePlusChances.ENDERMAN_RARE_ENDER_PEARL_LOOT
                 ) {
-                    this.dropStack(world, new ItemStack(RegisterItems.RARE_ENDER_PEARL_ITEM, 1));
+                    this.spawnAtLocation(world, new ItemStack(RegisterItems.RARE_ENDER_PEARL_ITEM, 1));
                 }
             }
-            this.dropStack(world, stack);
+            this.spawnAtLocation(world, stack);
         });
     }
 }

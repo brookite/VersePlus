@@ -2,17 +2,18 @@ package io.github.brookite.verseplus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Pair;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemDropLogHandler extends PersistentState {
+public class ItemDropLogHandler extends SavedData {
     private static final int LOG_SLICE_TIME = 5 * 60;
 
     private static class DropEntry {
@@ -48,27 +49,27 @@ public class ItemDropLogHandler extends PersistentState {
 
     private void addItem(DropEntry entry, ItemStack stack) {
         entry.stacks.add(stack);
-        markDirty();
+        setDirty();
     }
 
     public void addItem(ItemStack stack) {
         long seconds = System.currentTimeMillis() / 1000;
-        Pair<DropEntry, Boolean> entry = findOrCreateEntry(seconds);
-        addItem(entry.getLeft(), stack);
-        if (!entry.getRight()) {
-            addEntry(entry.getLeft());
+        Tuple<DropEntry, Boolean> entry = findOrCreateEntry(seconds);
+        addItem(entry.getA(), stack);
+        if (!entry.getB()) {
+            addEntry(entry.getA());
         }
     }
 
-    public Pair<DropEntry, Boolean> findOrCreateEntry(long seconds) {
+    public Tuple<DropEntry, Boolean> findOrCreateEntry(long seconds) {
         for (DropEntry entry : drops) {
             if (entry.timestamp == (seconds - seconds % LOG_SLICE_TIME)) {
-                return new Pair<>(entry, true);
+                return new Tuple<>(entry, true);
             }
         }
         long timestamp = System.currentTimeMillis() / 1000;
         long interval = timestamp - timestamp % LOG_SLICE_TIME;
-        return new Pair<>(new DropEntry(interval, new ArrayList<>()), false);
+        return new Tuple<>(new DropEntry(interval, new ArrayList<>()), false);
     }
 
     public List<DropEntry> getDrops() {
@@ -87,8 +88,8 @@ public class ItemDropLogHandler extends PersistentState {
         this.drops = new ArrayList<>();
     }
 
-    public static ItemDropLogHandler get(ServerWorld serverWorld) {
-        ItemDropLogHandler state = serverWorld.getPersistentStateManager().getOrCreate(TYPE);
+    public static ItemDropLogHandler get(ServerLevel serverWorld) {
+        ItemDropLogHandler state = serverWorld.getDataStorage().computeIfAbsent(TYPE);
         return state;
     }
 
@@ -98,8 +99,9 @@ public class ItemDropLogHandler extends PersistentState {
             ).apply(instance, ItemDropLogHandler::new)
     );
 
-    private static final PersistentStateType<ItemDropLogHandler> TYPE =
-            new PersistentStateType<>("drop_graveyard", ItemDropLogHandler::new, CODEC, null);
+    private static final SavedDataType<ItemDropLogHandler> TYPE =
+            new SavedDataType<>(Identifier.fromNamespaceAndPath(VersePlus.MOD_ID,
+                    "drop_graveyard"), ItemDropLogHandler::new, CODEC, null);
 
 
 }

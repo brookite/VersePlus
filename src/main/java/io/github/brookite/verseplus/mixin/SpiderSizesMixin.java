@@ -2,20 +2,20 @@ package io.github.brookite.verseplus.mixin;
 
 import io.github.brookite.verseplus.enums.SpiderVariant;
 import io.github.brookite.verseplus.interfaces.SizeableSpider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.spider.Spider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,74 +24,74 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static io.github.brookite.verseplus.VersePlusChances.*;
 
 
-@Mixin(SpiderEntity.class)
-public class SpiderSizesMixin extends HostileEntity implements SizeableSpider {
-    private static final TrackedData<Byte> SPIDER_SIZE_VARIANT = DataTracker.registerData(SpiderEntity.class, TrackedDataHandlerRegistry.BYTE);
+@Mixin(Spider.class)
+public class SpiderSizesMixin extends Monster implements SizeableSpider {
+    private static final EntityDataAccessor<Byte> SPIDER_SIZE_VARIANT = SynchedEntityData.defineId(Spider.class, EntityDataSerializers.BYTE);
 
-    protected SpiderSizesMixin(EntityType<? extends HostileEntity> entityType, World world) {
+    protected SpiderSizesMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
-        setVariant(SpiderVariant.values()[world.random.nextBetween(2, 3)]);
+        setVariant(SpiderVariant.values()[world.getRandom().nextIntBetweenInclusive(2, 3)]);
     }
 
     @Override
     public void setVariant(SpiderVariant variant) {
-        this.dataTracker.set(SPIDER_SIZE_VARIANT, variant.getIndexAsByte());
+        this.entityData.set(SPIDER_SIZE_VARIANT, variant.getIndexAsByte());
     }
 
     @Override
     public SpiderVariant getVariant() {
-        return SpiderVariant.values()[this.dataTracker.get(SPIDER_SIZE_VARIANT)];
+        return SpiderVariant.values()[this.entityData.get(SPIDER_SIZE_VARIANT)];
     }
 
-    @Inject(method = "initDataTracker(Lnet/minecraft/entity/data/DataTracker$Builder;)V", at=@At("TAIL"))
-    protected void initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(SPIDER_SIZE_VARIANT, SpiderVariant.LARGE.getIndexAsByte());
+    @Inject(method = "defineSynchedData(Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V", at=@At("TAIL"))
+    protected void initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(SPIDER_SIZE_VARIANT, SpiderVariant.LARGE.getIndexAsByte());
     }
 
     @Override
-    public boolean damage(ServerWorld world, DamageSource source, float amount) {
-        SpiderEntity spider = (SpiderEntity) (Object) this;
+    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
+        Spider spider = (Spider) (Object) this;
 
         if (spider.getHealth() - amount <= 0) {
             Difficulty difficulty = world.getDifficulty();
 
             if (getVariant() == SpiderVariant.LARGE && difficulty == Difficulty.HARD
-                    && world.random.nextDouble() < PREGNANT_SPIDER_CHANCE
-                    && spider.getClass().equals(SpiderEntity.class) // only for spiders (not cave spiders)
+                    && world.getRandom().nextDouble() < PREGNANT_SPIDER_CHANCE
+                    && spider.getClass().equals(Spider.class) // only for spiders (not cave spiders)
             ) {
-                int count = world.getRandom().nextBetween(BABY_SPIDER_MIN_COUNT, BABY_SPIDER_MAX_COUNT);
+                int count = world.getRandom().nextIntBetweenInclusive(BABY_SPIDER_MIN_COUNT, BABY_SPIDER_MAX_COUNT);
                 for (int i = 0; i < count; i++) {
-                    SpiderEntity baby = new SpiderEntity(EntityType.SPIDER, world);
-                    SpiderVariant variant = SpiderVariant.values()[world.random.nextBetween(0, 2)];
+                    Spider baby = new Spider(EntityType.SPIDER, world);
+                    SpiderVariant variant = SpiderVariant.values()[world.getRandom().nextIntBetweenInclusive(0, 2)];
 
                     ((SizeableSpider)baby).setVariant(variant);
 
-                    double x = spider.getX() + (world.random.nextDouble() - 0.5) * 3;
-                    double z = spider.getZ() + (world.random.nextDouble() - 0.5) * 3;
+                    double x = spider.getX() + (world.getRandom().nextDouble() - 0.5) * 3;
+                    double z = spider.getZ() + (world.getRandom().nextDouble() - 0.5) * 3;
 
-                    baby.setPosition(x, spider.getY(), z);
-                    baby.setAiDisabled(false);
-                    if (source.getAttacker() instanceof LivingEntity living
-                            && !(living instanceof PlayerEntity p && p.isCreative())) {
+                    baby.setPos(x, spider.getY(), z);
+                    baby.setNoAi(false);
+                    if (source.getEntity() instanceof LivingEntity living
+                            && !(living instanceof Player p && p.isCreative())) {
                         baby.setTarget(living);
                     }
 
-                    world.spawnEntity(baby);
+                    world.addFreshEntity(baby);
                 }
             }
         }
-        return super.damage(world, source, amount);
+        return super.hurtServer(world, source, amount);
     }
 
     @Override
-    protected void writeCustomData(WriteView view) {
-        super.writeCustomData(view);
-        view.put("type", SpiderVariant.CODEC, this.getVariant());
+    protected void addAdditionalSaveData(ValueOutput view) {
+        super.addAdditionalSaveData(view);
+        view.store("type", SpiderVariant.CODEC, this.getVariant());
     }
 
     @Override
-    protected void readCustomData(ReadView view) {
-        super.readCustomData(view);
+    protected void readAdditionalSaveData(ValueInput view) {
+        super.readAdditionalSaveData(view);
         this.setVariant(view.read("type", SpiderVariant.CODEC).orElse(SpiderVariant.DEFAULT));
     }
 }

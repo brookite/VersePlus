@@ -1,0 +1,8 @@
+classTweaker v1	official
+accessible	class	net/minecraft/server/level/ServerPlayer$RespawnPosAngle
+accessible	method	net/minecraft/server/level/ServerPlayer$RespawnConfig	getDimensionOrDefault	(Lnet/minecraft/server/level/ServerPlayer$RespawnConfig;)Lnet/minecraft/resources/ResourceKey;
+accessible	field	net/minecraft/world/entity/projectile/hurtingprojectile/LargeFireball	explosionPower	I
+extendable	method	net/minecraft/world/entity/Entity	discard	()V
+accessible	field	net/minecraft/world/entity/item/ItemEntity	health	I
+extendable	method	net/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEnderpearl	playSound	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;)V
+accessible	method	net/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEnderpearl	playSound	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;)V

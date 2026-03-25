@@ -3,26 +3,26 @@ package io.github.brookite.verseplus;
 import io.github.brookite.verseplus.enums.SpiderVariant;
 import io.github.brookite.verseplus.registries.CustomEntityModelLayers;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.minecraft.client.render.entity.model.ModelTransformer;
-import net.minecraft.client.render.entity.model.SpiderEntityModel;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.minecraft.client.model.geom.builders.MeshTransformer;
+import net.minecraft.client.model.monster.spider.SpiderModel;
 
 public class VersePlusClient  implements ClientModInitializer {
     private void registerSpiders() {
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
                 CustomEntityModelLayers.SPIDER_TINY_LAYER,
-                () -> SpiderEntityModel.getTexturedModelData().transform(
-                        ModelTransformer.scaling(SpiderVariant.TINY.getScale()))
+                () -> SpiderModel.createSpiderBodyLayer().apply(
+                        MeshTransformer.scaling(SpiderVariant.TINY.getScale()))
         );
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
                 CustomEntityModelLayers.SPIDER_SMALL_LAYER,
-                () -> SpiderEntityModel.getTexturedModelData().transform(
-                        ModelTransformer.scaling(SpiderVariant.SMALL.getScale()))
+                () -> SpiderModel.createSpiderBodyLayer().apply(
+                        MeshTransformer.scaling(SpiderVariant.SMALL.getScale()))
         );
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
                 CustomEntityModelLayers.SPIDER_MEDIUM_LAYER,
-                () -> SpiderEntityModel.getTexturedModelData().transform(
-                        ModelTransformer.scaling(SpiderVariant.MEDIUM.getScale()))
+                () -> SpiderModel.createSpiderBodyLayer().apply(
+                        MeshTransformer.scaling(SpiderVariant.MEDIUM.getScale()))
         );
     }
 

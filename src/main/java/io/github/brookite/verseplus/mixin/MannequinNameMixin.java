@@ -1,12 +1,12 @@
 package io.github.brookite.verseplus.mixin;
 
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.MannequinEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,39 +14,39 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MannequinEntity.class)
+@Mixin(Mannequin.class)
 public abstract class MannequinNameMixin extends Entity {
-    public MannequinNameMixin(EntityType<?> type, World world) {
+    public MannequinNameMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Shadow protected abstract void setHideDescription(boolean hideDescription);
 
     @Shadow
-    protected abstract ProfileComponent getMannequinProfile();
+    protected abstract ResolvableProfile getProfile();
 
-    @Inject(method= "setMannequinProfile(Lnet/minecraft/component/type/ProfileComponent;)V",  at=@At("TAIL"))
-    public void setMannequinProfile(ProfileComponent profileComponent, CallbackInfo ci) {
-        MannequinEntity entity = ((MannequinEntity)(Object)this);
-        if (profileComponent != null && !entity.hasCustomName() && profileComponent.getName().isPresent()) {
-            entity.setCustomName(Text.of(getMannequinProfile().getName().get()));
+    @Inject(method= "setProfile(Lnet/minecraft/world/item/component/ResolvableProfile;)V",  at=@At("TAIL"))
+    public void setMannequinProfile(ResolvableProfile profileComponent, CallbackInfo ci) {
+        Mannequin entity = ((Mannequin)(Object)this);
+        if (profileComponent != null && !entity.hasCustomName() && profileComponent.name().isPresent()) {
+            entity.setCustomName(Component.nullToEmpty(getProfile().name().get()));
         }
     }
 
     @Override
-    public void setCustomName(@Nullable Text name) {
+    public void setCustomName(@Nullable Component name) {
         super.setCustomName(name);
         if (this.hasCustomName())  {
             this.setCustomNameVisible(true);
         }
     }
 
-    @Inject(method = "Lnet/minecraft/entity/decoration/MannequinEntity;readCustomData(Lnet/minecraft/storage/ReadView;)V", at=@At("TAIL"))
-    public void readCustomData(ReadView readView, CallbackInfo ci) {
-        this.setHideDescription(readView.getBoolean("hide_description", true));
+    @Inject(method = "readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V", at=@At("TAIL"))
+    public void readCustomData(ValueInput readView, CallbackInfo ci) {
+        this.setHideDescription(readView.getBooleanOr("hide_description", true));
     }
 
-    @Inject(method= "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;)V", at=@At("TAIL"))
+    @Inject(method= "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", at=@At("TAIL"))
     private void init(CallbackInfo ci) {
         this.setHideDescription(true);
     }

@@ -1,25 +1,25 @@
 package io.github.brookite.verseplus.enums;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.function.ValueLists;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.function.IntFunction;
 
-public enum SpiderVariant implements StringIdentifiable {
+public enum SpiderVariant implements StringRepresentable {
     TINY("tiny", (byte) 0, 0.3F),
     SMALL("small", (byte) 1, 0.5F),
     MEDIUM("medium", (byte) 2, 0.7F),
     LARGE("large", (byte) 3, 1.0F);
 
     public static final SpiderVariant DEFAULT = LARGE;
-    public static final StringIdentifiable.EnumCodec<SpiderVariant> CODEC = StringIdentifiable.createCodec(SpiderVariant::values);
-    static final IntFunction<SpiderVariant> FROM_INDEX = ValueLists.createIndexToValueFunction(
-            SpiderVariant::getIndex, values(), ValueLists.OutOfBoundsHandling.CLAMP
+    public static final StringRepresentable.EnumCodec<SpiderVariant> CODEC = StringRepresentable.fromEnum(SpiderVariant::values);
+    static final IntFunction<SpiderVariant> FROM_INDEX = ByIdMap.continuous(
+            SpiderVariant::getIndex, values(), ByIdMap.OutOfBoundsStrategy.CLAMP
     );
-    public static final PacketCodec<ByteBuf, SpiderVariant> PACKET_CODEC = PacketCodecs.indexed(FROM_INDEX, SpiderVariant::getIndex);
+    public static final StreamCodec<ByteBuf, SpiderVariant> PACKET_CODEC = ByteBufCodecs.idMapper(FROM_INDEX, SpiderVariant::getIndex);
     private final String id;
     final byte index;
     final float scale;
@@ -35,7 +35,7 @@ public enum SpiderVariant implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
 

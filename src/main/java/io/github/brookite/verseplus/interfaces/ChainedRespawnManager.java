@@ -1,9 +1,9 @@
 package io.github.brookite.verseplus.interfaces;
 
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayDeque;
 
 public interface ChainedRespawnManager {
-    ArrayDeque<ServerPlayerEntity.Respawn> getRespawns();
+    ArrayDeque<ServerPlayer.RespawnConfig> getRespawns();
 }

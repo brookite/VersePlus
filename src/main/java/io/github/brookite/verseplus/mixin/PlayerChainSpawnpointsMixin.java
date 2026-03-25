@@ -3,10 +3,10 @@ package io.github.brookite.verseplus.mixin;
 import com.mojang.serialization.Codec;
 import io.github.brookite.verseplus.interfaces.ChainedRespawnManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -23,14 +23,14 @@ import java.util.Optional;
 
 import static io.github.brookite.verseplus.VersePlusLimits.MAX_RESPAWNS;
 
-@Mixin(ServerPlayerEntity.class)
+@Mixin(ServerPlayer.class)
 public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManager {
-    @Unique public ArrayDeque<ServerPlayerEntity.Respawn> respawns = new ArrayDeque<>();
-    @Shadow private ServerPlayerEntity.Respawn respawn;
+    @Unique public ArrayDeque<ServerPlayer.RespawnConfig> respawns = new ArrayDeque<>();
+    @Shadow private ServerPlayer.RespawnConfig respawnConfig;
     @Shadow private MinecraftServer server;
 
-    @Invoker("findRespawnPosition")
-    static Optional<ServerPlayerEntity.RespawnPos> findRespawnPosition(ServerWorld world, ServerPlayerEntity.Respawn respawn, boolean bl) {
+    @Invoker("findRespawnAndUseSpawnBlock")
+    static Optional<ServerPlayer.RespawnPosAngle> findRespawnPosition(ServerLevel world, ServerPlayer.RespawnConfig respawn, boolean bl) {
         throw new AssertionError(); // unreachable
     }
 
@@ -39,61 +39,61 @@ public abstract class PlayerChainSpawnpointsMixin implements ChainedRespawnManag
      * @reason add chained respawns
      */
     @Overwrite
-    public @Nullable ServerPlayerEntity.Respawn getRespawn() {
+    public @Nullable ServerPlayer.RespawnConfig getRespawnConfig() {
         var toRemoveRespawns = this.respawns.stream()
                 .filter(r -> !r.forced()
-                        && findRespawnPosition(this.server.getWorld(ServerPlayerEntity.Respawn.getDimension(r)), r, false)
+                        && findRespawnPosition(this.server.getLevel(ServerPlayer.RespawnConfig.getDimensionOrDefault(r)), r, false)
                         .isEmpty()).toList();
 
         for (var invalidRespawn : toRemoveRespawns) {
             this.respawns.remove(invalidRespawn);
         }
 
-        if (this.respawn != null
-                && findRespawnPosition(this.server.getWorld(ServerPlayerEntity.Respawn.getDimension(this.respawn)), this.respawn, false).isEmpty()
+        if (this.respawnConfig != null
+                && findRespawnPosition(this.server.getLevel(ServerPlayer.RespawnConfig.getDimensionOrDefault(this.respawnConfig)), this.respawnConfig, false).isEmpty()
                 && this.respawns.size() > 0) {
-            this.respawn = this.respawns.removeFirst();
+            this.respawnConfig = this.respawns.removeFirst();
         }
 
-        return this.respawn;
+        return this.respawnConfig;
     }
 
-    @Inject(at = @At("TAIL"), method = "copyFrom(Lnet/minecraft/server/network/ServerPlayerEntity;Z)V")
-    public void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V")
+    public void copyFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
         this.respawns = new ArrayDeque<>(((ChainedRespawnManager) oldPlayer).getRespawns());
     }
 
     @Override
     @Unique
-    public ArrayDeque<ServerPlayerEntity.Respawn> getRespawns() {
+    public ArrayDeque<ServerPlayer.RespawnConfig> getRespawns() {
         return this.respawns;
     }
 
-    @Inject(at = @At("HEAD"), method="setSpawnPoint(Lnet/minecraft/server/network/ServerPlayerEntity$Respawn;Z)V")
-    public void setSpawnPoint(ServerPlayerEntity.Respawn respawn, boolean sendMessage, CallbackInfo ci) {
-        List<ServerPlayerEntity.Respawn> duplicates = respawns.stream()
-                .filter(e -> e != null && e.posEquals(respawn))
+    @Inject(at = @At("HEAD"), method="setRespawnPosition(Lnet/minecraft/server/level/ServerPlayer$RespawnConfig;Z)V")
+    public void setSpawnPoint(ServerPlayer.RespawnConfig respawn, boolean sendMessage, CallbackInfo ci) {
+        List<ServerPlayer.RespawnConfig> duplicates = respawns.stream()
+                .filter(e -> e != null && e.isSamePosition(respawn))
                 .toList();
 
-        for (ServerPlayerEntity.Respawn duplicate : duplicates) {
+        for (ServerPlayer.RespawnConfig duplicate : duplicates) {
             respawns.remove(duplicate);
         }
 
-        if (this.respawn != null && respawn != null && !respawn.posEquals(this.respawn)) {
-            respawns.addFirst(this.respawn);
+        if (this.respawnConfig != null && respawn != null && !respawn.isSamePosition(this.respawnConfig)) {
+            respawns.addFirst(this.respawnConfig);
             if (respawns.size() > MAX_RESPAWNS) {
                 respawns.removeLast();
             }
         }
     }
 
-    @Inject(at = @At("TAIL"), method="writeCustomData(Lnet/minecraft/storage/WriteView;)V")
-    protected void writeCustomData(WriteView view, CallbackInfo ci) {
-        view.put("respawnChain", Codec.list(ServerPlayerEntity.Respawn.CODEC), this.respawns.stream().toList());
+    @Inject(at = @At("TAIL"), method="addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V")
+    protected void writeCustomData(ValueOutput view, CallbackInfo ci) {
+        view.store("respawnChain", Codec.list(ServerPlayer.RespawnConfig.CODEC), this.respawns.stream().toList());
     }
 
-    @Inject(at = @At("TAIL"), method="readCustomData(Lnet/minecraft/storage/ReadView;)V")
-    protected void readCustomData(ReadView view, CallbackInfo ci) {
-        this.respawns = new ArrayDeque<>(view.read("respawnChain", Codec.list(ServerPlayerEntity.Respawn.CODEC)).orElse(List.of()));
+    @Inject(at = @At("TAIL"), method="readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V")
+    protected void readCustomData(ValueInput view, CallbackInfo ci) {
+        this.respawns = new ArrayDeque<>(view.read("respawnChain", Codec.list(ServerPlayer.RespawnConfig.CODEC)).orElse(List.of()));
     }
 }

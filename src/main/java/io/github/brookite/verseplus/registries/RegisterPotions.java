@@ -1,22 +1,22 @@
 package io.github.brookite.verseplus.registries;
 
 import io.github.brookite.verseplus.VersePlus;
-import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 
 public class RegisterPotions {
-    public static final RegistryEntry<Potion> TRUE_INVISIBILITY = registerPotion("true_invisibility",
+    public static final Holder<Potion> TRUE_INVISIBILITY = registerPotion("true_invisibility",
             new Potion("invisibility",
-                new StatusEffectInstance(
-                        StatusEffects.INVISIBILITY,
+                new MobEffectInstance(
+                        MobEffects.INVISIBILITY,
                         19200,
                         1,
                         false,
@@ -26,17 +26,17 @@ public class RegisterPotions {
             )
     );
 
-    private static RegistryEntry<Potion> registerPotion(String name, Potion potion) {
-        return Registry.registerReference(
-                Registries.POTION,
-                Identifier.of(VersePlus.MOD_ID, name),
+    private static Holder<Potion> registerPotion(String name, Potion potion) {
+        return Registry.registerForHolder(
+                BuiltInRegistries.POTION,
+                Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, name),
                 potion
         );
     }
 
     public static void initialize() {
-        FabricBrewingRecipeRegistryBuilder.BUILD.register(builder -> {
-            builder.registerPotionRecipe(Potions.LONG_INVISIBILITY, Items.GLOWSTONE_DUST, TRUE_INVISIBILITY);
+        FabricPotionBrewingBuilder.BUILD.register(builder -> {
+            builder.addMix(Potions.LONG_INVISIBILITY, Items.GLOWSTONE_DUST, TRUE_INVISIBILITY);
         });
     }
 
