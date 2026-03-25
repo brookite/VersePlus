@@ -2,6 +2,7 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterItems;
+import io.github.brookite.verseplus.registries.RegisterPlacedFeatures;
 import io.github.brookite.verseplus.registries.RegisterPotions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -23,6 +24,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradedItem;
+import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,14 @@ public class VersePlus implements ModInitializer {
                             RegistryKey.of(RegistryKeys.PLACED_FEATURE,
                             Identifier.of(MOD_ID,"trees_birch_and_oak")));
                 }
+        );
+    }
+
+    private void addOceanSponges() {
+        BiomeModifications.addFeature(
+                BiomeSelectors.includeByKey(BiomeKeys.WARM_OCEAN),
+                GenerationStep.Feature.VEGETAL_DECORATION,
+                RegisterPlacedFeatures.WET_SPONGE_PILE_PLACED_KEY
         );
     }
 
@@ -98,13 +108,17 @@ public class VersePlus implements ModInitializer {
 
     @Override
 	public void onInitialize() {
-        changeForestTrees();
-        extendVanillaLootTables(getNewLoots());
-        extendWanderingTraderOffers();
         RegisterItems.initialize();
         RegisterPotions.initialize();
         RegisterEntities.initialize();
         DispenserBlock.registerBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM,
                 new ProjectileDispenserBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));
-	}
+
+        extendVanillaLootTables(getNewLoots());
+        extendWanderingTraderOffers();
+
+        changeForestTrees();
+        addOceanSponges();
+
+    }
 }
