@@ -19,8 +19,7 @@ public class RegisterEntities {
     );
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> type) {
-        ResourceKey<EntityType<?>> regKey =
-                ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, name));
+        var regKey = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, name));
         return Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, name),
