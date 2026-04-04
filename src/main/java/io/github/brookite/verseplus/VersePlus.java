@@ -12,7 +12,6 @@ import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -46,17 +45,6 @@ public class VersePlus implements ModInitializer {
                             ResourceKey.create(Registries.PLACED_FEATURE,
                             Identifier.fromNamespaceAndPath(MOD_ID,"trees_birch_and_oak")));
                 }
-        );
-    }
-
-    private void addOceanSponges() {
-        BiomeModifications.addFeature(
-                BiomeSelectors.includeByKey(Biomes.LUKEWARM_OCEAN),
-                GenerationStep.Decoration.VEGETAL_DECORATION,
-                ResourceKey.create(
-                        Registries.PLACED_FEATURE,
-                        Identifier.fromNamespaceAndPath("verseplus", "wet_sponge_pile_placed")
-                )
         );
     }
 
@@ -95,6 +83,5 @@ public class VersePlus implements ModInitializer {
         extendVanillaLootTables(getNewLoots());
 
         changeForestTrees();
-        addOceanSponges();
     }
 }
