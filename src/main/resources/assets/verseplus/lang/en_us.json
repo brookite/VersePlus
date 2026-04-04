@@ -7,5 +7,7 @@
   "item.minecraft.potion.effect.true_invisibility": "Potion of Invisibility",
   "item.minecraft.splash_potion.effect.true_invisibility": "Splash Potion of Invisibility",
   "item.minecraft.lingering_potion.effect.true_invisibility": "Lingering Potion of Invisibility",
-  "verseplus.rarepearl.transition_failed": "Currently, moving to the respawn location is not possible due to the hostiles around you"
+  "verseplus.rarepearl.transition_failed": "Currently, moving to the respawn location is not possible due to the hostiles around you",
+  "advancement.verseplus.collect_all_discs.title": "Musician & Collector",
+  "advancement.verseplus.collect_all_discs.description": "Collect all music discs"
 }

@@ -7,5 +7,7 @@
   "item.minecraft.splash_potion.effect.true_invisibility": "Взрывное зелье невидимости",
   "item.minecraft.lingering_potion.effect.true_invisibility": "Взвешенное зелье невидимости",
   "verseplus.rarepearl.transition": "Вы переместились на место вашего возрождения",
-  "verseplus.rarepearl.transition_failed": "В настоящее время перемещение на место возрождения невозможно из-за опасностей вокруг вас"
+  "verseplus.rarepearl.transition_failed": "В настоящее время перемещение на место возрождения невозможно из-за опасностей вокруг вас",
+  "advancement.verseplus.collect_all_discs.title": "Коллекционер-музыкант",
+  "advancement.verseplus.collect_all_discs.description": "Собрать все музыкальные пластинки"
 }
