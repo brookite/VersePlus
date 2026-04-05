@@ -1,6 +1,6 @@
 VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 
-*Current supported MC version:* **26.1**
+*Current supported MC version:* **26.1.1**
 
 *Release status:* **0.8.0-experimental**
 
