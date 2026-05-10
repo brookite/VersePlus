@@ -20,7 +20,7 @@ public class RegisterPotions {
                         19200,
                         1,
                         false,
-                        false,
+                        true,
                         true
                 )
             )
