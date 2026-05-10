@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -47,7 +48,7 @@ public class UnderwaterBlockPileFeature extends Feature<BlockPileConfiguration> 
 
     private boolean tryPlaceBlock(WorldGenLevel level, BlockPos blockPos, RandomSource random, BlockPileConfiguration config) {
         if (level.getBlockState(blockPos).is(Blocks.WATER) && this.mayPlaceOn(level, blockPos)) {
-            level.setBlock(blockPos, config.stateProvider.getState(level, random, blockPos), 260);
+            level.setBlock(blockPos, config.stateProvider.getState(level, random, blockPos), Block.UPDATE_ALL);
             return true;
         }
 
