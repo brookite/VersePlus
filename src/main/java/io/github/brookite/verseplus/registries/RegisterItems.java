@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Function;
 
@@ -34,8 +35,13 @@ public class RegisterItems {
     public static final Item CHARGED_RARE_ENDER_PEARL_ITEM = register("charged_rare_ender_pearl_item",
             ChargedRareEnderPearlItem::new,
             new Item.Properties().useCooldown(15).stacksTo(16).rarity(Rarity.EPIC));
+    public static final Item FROSTED_ICE_ITEM = register("frosted_ice",
+            properties -> new BlockItem(Blocks.FROSTED_ICE, properties),
+            new Item.Properties());
 
     public static void initialize() {
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(entries ->
+                entries.insertAfter(Items.ICE, RegisterItems.FROSTED_ICE_ITEM));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
                 entries.insertAfter(Items.FIRE_CHARGE, RegisterItems.THROWABLE_FIREBALL_ITEM));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
