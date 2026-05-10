@@ -1,8 +1,8 @@
 VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 
-*Current supported MC version:* **26.1.1**
+*Current supported MC version:* **26.1.2**
 
-*Release status:* **0.8.0-experimental**
+*Release status:* **0.9.0**
 
 ## Current Features
 - Increased up to 6x player's drop lifetime (30 minutes)
@@ -10,6 +10,9 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Reduced leaf litter in forest biome
 - Chained respawn points (buffered 32 spawnpoints)
 - Rebalanced lead craft
+- Frosted Ice Block
+- Sponge piles in warm oceans
+- Porting Bedrock (before 1.19.40) windswept savanna grass color
 - Player's drop NBT log (in world folder, `data/players_drop_graveyard.dat`)
 - Throwable fireball item
 - Mannequin persistent nickname visibility
