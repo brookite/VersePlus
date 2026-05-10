@@ -12,6 +12,7 @@ import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -44,6 +45,17 @@ public class VersePlus implements ModInitializer {
                     context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
                             ResourceKey.create(Registries.PLACED_FEATURE,
                             Identifier.fromNamespaceAndPath(MOD_ID,"trees_birch_and_oak")));
+                }
+        );
+    }
+
+    private void changeWindsweptSavannaClimate() {
+        BiomeModifications.create(Identifier.fromNamespaceAndPath(MOD_ID, "changed_windswept_savanna_climate")).add(
+                ModificationPhase.REPLACEMENTS,
+                BiomeSelectors.includeByKey(Biomes.WINDSWEPT_SAVANNA),
+                (selection, context) -> {
+                    context.getWeather().setTemperature(1.1F);
+                    context.getWeather().setDownfall(0.5F);
                 }
         );
     }
@@ -83,5 +95,6 @@ public class VersePlus implements ModInitializer {
         extendVanillaLootTables(getNewLoots());
 
         changeForestTrees();
+        changeWindsweptSavannaClimate();
     }
 }
