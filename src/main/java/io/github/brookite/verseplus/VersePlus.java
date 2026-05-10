@@ -1,6 +1,7 @@
 package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.registries.RegisterEntities;
+import io.github.brookite.verseplus.registries.RegisterFeatures;
 import io.github.brookite.verseplus.registries.RegisterItems;
 import io.github.brookite.verseplus.registries.RegisterPotions;
 import net.fabricmc.api.ModInitializer;
@@ -60,6 +61,18 @@ public class VersePlus implements ModInitializer {
         );
     }
 
+    private void addWarmOceanSpongePiles() {
+        BiomeModifications.create(Identifier.fromNamespaceAndPath(MOD_ID, "added_warm_ocean_sponge_piles")).add(
+                ModificationPhase.ADDITIONS,
+                BiomeSelectors.includeByKey(Biomes.WARM_OCEAN),
+                (selection, context) -> context.getGenerationSettings().addFeature(
+                        GenerationStep.Decoration.VEGETAL_DECORATION,
+                        ResourceKey.create(Registries.PLACED_FEATURE,
+                                Identifier.fromNamespaceAndPath(MOD_ID, "sponge_pile"))
+                )
+        );
+    }
+
     private void extendVanillaLootTables(Map<Identifier, LootPool> pools) {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
             var lootTable = resourceManager.identifier();
@@ -86,6 +99,7 @@ public class VersePlus implements ModInitializer {
 
     @Override
 	public void onInitialize() {
+        RegisterFeatures.initialize();
         RegisterItems.initialize();
         RegisterPotions.initialize();
         RegisterEntities.initialize();
@@ -96,5 +110,6 @@ public class VersePlus implements ModInitializer {
 
         changeForestTrees();
         changeWindsweptSavannaClimate();
+        addWarmOceanSpongePiles();
     }
 }
