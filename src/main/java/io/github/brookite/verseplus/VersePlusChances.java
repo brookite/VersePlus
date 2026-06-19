@@ -9,4 +9,9 @@ public class VersePlusChances {
     public static final float PREGNANT_SPIDER_CHANCE = 0.035f;
     public static final int BABY_SPIDER_MAX_COUNT = 7;
     public static final int BABY_SPIDER_MIN_COUNT = 2;
+
+    public static final float WEAVING_SPIDER_NATURAL_SPAWN_CHANCE = 0.07f;
+    public static final float EMPTY_SNIFFER_EGG_CHANCE = 0.10f;
+    public static final float UNPICKABLE_GHAST_TEAR_CHANCE = 0.15f;
+    public static final float GHAST_MUSIC_DISC_CHANCE = 0.50f;
 }

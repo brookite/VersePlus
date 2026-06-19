@@ -17,10 +17,12 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,10 @@ import java.util.Map;
 public class VersePlus implements ModInitializer {
 	public static final String MOD_ID = "verseplus";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final ResourceKey<LootTable> GHAST_LOOT_TABLE = ResourceKey.create(
+            Registries.LOOT_TABLE,
+            Identifier.withDefaultNamespace("entities/ghast")
+    );
 
     private void changeForestTrees() {
         BiomeModifications.create(Identifier.fromNamespaceAndPath(MOD_ID, "changed_forest_trees")).add(
@@ -78,6 +84,7 @@ public class VersePlus implements ModInitializer {
                 ModificationPhase.ADDITIONS,
                 BiomeSelectors.includeByKey(
                         Biomes.COLD_OCEAN,
+                        Biomes.OCEAN,
                         Biomes.DEEP_COLD_OCEAN,
                         Biomes.FROZEN_OCEAN,
                         Biomes.DEEP_FROZEN_OCEAN
@@ -99,6 +106,15 @@ public class VersePlus implements ModInitializer {
                 }
             }
         });
+    }
+
+    private void modifyGhastMusicDiscDrops() {
+        LootTableEvents.MODIFY_DROPS.register((entry, context, drops) -> entry.unwrapKey().ifPresent(key -> {
+            if (key.equals(GHAST_LOOT_TABLE)) {
+                drops.removeIf(stack -> stack.is(Items.MUSIC_DISC_TEARS)
+                        && context.getRandom().nextFloat() >= VersePlusChances.GHAST_MUSIC_DISC_CHANCE);
+            }
+        }));
     }
 
     private Map<Identifier, LootPool> getNewLoots() {
@@ -124,6 +140,7 @@ public class VersePlus implements ModInitializer {
                 new ProjectileDispenseBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM));
 
         extendVanillaLootTables(getNewLoots());
+        modifyGhastMusicDiscDrops();
 
         changeForestTrees();
         changeWindsweptSavannaClimate();
