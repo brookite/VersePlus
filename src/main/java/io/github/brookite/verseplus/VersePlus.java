@@ -73,6 +73,23 @@ public class VersePlus implements ModInitializer {
         );
     }
 
+    private void addColdOceanSuspiciousFloorBlocks() {
+        BiomeModifications.create(Identifier.fromNamespaceAndPath(MOD_ID, "added_cold_ocean_suspicious_floor_blocks")).add(
+                ModificationPhase.ADDITIONS,
+                BiomeSelectors.includeByKey(
+                        Biomes.COLD_OCEAN,
+                        Biomes.DEEP_COLD_OCEAN,
+                        Biomes.FROZEN_OCEAN,
+                        Biomes.DEEP_FROZEN_OCEAN
+                ),
+                (selection, context) -> context.getGenerationSettings().addFeature(
+                        GenerationStep.Decoration.VEGETAL_DECORATION,
+                        ResourceKey.create(Registries.PLACED_FEATURE,
+                                Identifier.fromNamespaceAndPath(MOD_ID, "suspicious_ocean_floor"))
+                )
+        );
+    }
+
     private void extendVanillaLootTables(Map<Identifier, LootPool> pools) {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
             var lootTable = resourceManager.identifier();
@@ -111,5 +128,6 @@ public class VersePlus implements ModInitializer {
         changeForestTrees();
         changeWindsweptSavannaClimate();
         addWarmOceanSpongePiles();
+        addColdOceanSuspiciousFloorBlocks();
     }
 }
