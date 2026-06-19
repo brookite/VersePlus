@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.spider.Spider;
@@ -61,7 +62,7 @@ public class SpiderSizesMixin extends Monster implements SizeableSpider {
             ) {
                 int count = world.getRandom().nextIntBetweenInclusive(BABY_SPIDER_MIN_COUNT, BABY_SPIDER_MAX_COUNT);
                 for (int i = 0; i < count; i++) {
-                    Spider baby = new Spider(EntityType.SPIDER, world);
+                    Spider baby = new Spider(EntityTypes.SPIDER, world);
                     SpiderVariant variant = SpiderVariant.values()[world.getRandom().nextIntBetweenInclusive(0, 2)];
 
                     ((SizeableSpider)baby).setVariant(variant);

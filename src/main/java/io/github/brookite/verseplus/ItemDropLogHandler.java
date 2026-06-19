@@ -4,14 +4,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class ItemDropLogHandler extends SavedData {
     private static final int LOG_SLICE_TIME = 5 * 60;
@@ -54,22 +55,22 @@ public class ItemDropLogHandler extends SavedData {
 
     public void addItem(ItemStack stack) {
         long seconds = System.currentTimeMillis() / 1000;
-        Tuple<DropEntry, Boolean> entry = findOrCreateEntry(seconds);
-        addItem(entry.getA(), stack);
-        if (!entry.getB()) {
-            addEntry(entry.getA());
+        Map.Entry<DropEntry, Boolean> entry = findOrCreateEntry(seconds);
+        addItem(entry.getKey(), stack);
+        if (!entry.getValue()) {
+            addEntry(entry.getKey());
         }
     }
 
-    public Tuple<DropEntry, Boolean> findOrCreateEntry(long seconds) {
+    public Map.Entry<DropEntry, Boolean> findOrCreateEntry(long seconds) {
         for (DropEntry entry : drops) {
             if (entry.timestamp == (seconds - seconds % LOG_SLICE_TIME)) {
-                return new Tuple<>(entry, true);
+                return new AbstractMap.SimpleImmutableEntry<>(entry, true);
             }
         }
         long timestamp = System.currentTimeMillis() / 1000;
         long interval = timestamp - timestamp % LOG_SLICE_TIME;
-        return new Tuple<>(new DropEntry(interval, new ArrayList<>()), false);
+        return new AbstractMap.SimpleImmutableEntry<>(new DropEntry(interval, new ArrayList<>()), false);
     }
 
     public List<DropEntry> getDrops() {

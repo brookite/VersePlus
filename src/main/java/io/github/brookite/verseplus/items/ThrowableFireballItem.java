@@ -11,6 +11,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
@@ -45,7 +46,7 @@ public class ThrowableFireballItem extends Item implements ProjectileItem {
     public Projectile asProjectile(Level world, Position pos, ItemStack stack, Direction direction) {
         Optional<CompoundTag> params = getCustomParameters(stack);
 
-        LargeFireball fireballEntity = new LargeFireball(EntityType.FIREBALL, world);
+        LargeFireball fireballEntity = new LargeFireball(EntityTypes.FIREBALL, world);
         fireballEntity.setPos(pos.x(), pos.y(), pos.z());
         fireballEntity.setDeltaMovement(direction.getUnitVec3());
         fireballEntity.setItem(stack);
