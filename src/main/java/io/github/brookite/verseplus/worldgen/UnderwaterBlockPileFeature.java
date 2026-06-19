@@ -12,6 +12,8 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.BlockPileConfiguration;
 
 public class UnderwaterBlockPileFeature extends Feature<BlockPileConfiguration> {
+    private static final int MAX_BLOCKS_PER_PILE = 3;
+
     public UnderwaterBlockPileFeature(Codec<BlockPileConfiguration> codec) {
         super(codec);
     }
@@ -29,12 +31,19 @@ public class UnderwaterBlockPileFeature extends Feature<BlockPileConfiguration> 
         int xr = 2 + random.nextInt(2);
         int zr = 2 + random.nextInt(2);
         boolean placedAny = false;
+        int blocksToPlace = 1 + random.nextInt(MAX_BLOCKS_PER_PILE);
 
         for (BlockPos blockPos : BlockPos.betweenClosed(origin.offset(-xr, 0, -zr), origin.offset(xr, 1, zr))) {
             int xd = origin.getX() - blockPos.getX();
             int zd = origin.getZ() - blockPos.getZ();
             if (xd * xd + zd * zd <= random.nextFloat() * 10.0F - random.nextFloat() * 6.0F || random.nextFloat() < 0.031F) {
-                placedAny |= this.tryPlaceBlock(level, blockPos, random, config);
+                if (this.tryPlaceBlock(level, blockPos, random, config)) {
+                    placedAny = true;
+                    blocksToPlace--;
+                    if (blocksToPlace == 0) {
+                        break;
+                    }
+                }
             }
         }
 
