@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.BlockPileConfiguration;
 
 public class UnderwaterBlockPileFeature extends Feature<BlockPileConfiguration> {
-    private static final int MAX_BLOCKS_PER_PILE = 3;
+    private static final int MAX_BLOCKS_PER_PILE = 4;
 
     public UnderwaterBlockPileFeature(Codec<BlockPileConfiguration> codec) {
         super(codec);
