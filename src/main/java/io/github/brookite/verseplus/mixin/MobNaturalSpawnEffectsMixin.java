@@ -2,6 +2,7 @@ package io.github.brookite.verseplus.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static io.github.brookite.verseplus.VersePlusChances.WEAVING_SPIDER_HARD_NATURAL_SPAWN_CHANCE;
 import static io.github.brookite.verseplus.VersePlusChances.WEAVING_SPIDER_NATURAL_SPAWN_CHANCE;
 
 @Mixin(Mob.class)
@@ -40,13 +42,16 @@ public abstract class MobNaturalSpawnEffectsMixin extends LivingEntity {
             SpawnGroupData spawnGroupData,
             CallbackInfoReturnable<SpawnGroupData> cir
     ) {
-        if (spawnReason != EntitySpawnReason.NATURAL) {
-            return;
-        }
-
         ServerLevel level = levelAccessor.getLevel();
+        Difficulty levelDifficulty = level.getDifficulty();
+        float weavingChance = switch (levelDifficulty) {
+            case NORMAL -> WEAVING_SPIDER_NATURAL_SPAWN_CHANCE;
+            case HARD -> WEAVING_SPIDER_HARD_NATURAL_SPAWN_CHANCE;
+            default -> 0.0F;
+        };
+
         if ((Object) this instanceof Spider && level.isDarkOutside()
-                && getRandom().nextFloat() < WEAVING_SPIDER_NATURAL_SPAWN_CHANCE) {
+                && getRandom().nextFloat() < weavingChance) {
             addEffect(new MobEffectInstance(MobEffects.WEAVING, PERMANENT_SPAWN_EFFECT_DURATION));
         }
 
