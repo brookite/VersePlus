@@ -20,12 +20,19 @@ public class NameTagItemPlayerRenameMixin {
     @Inject(method = "interactLivingEntity", at = @At("HEAD"), cancellable = true)
     private void renamePlayers(ItemStack stack, Player user, LivingEntity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         Component name = stack.get(DataComponents.CUSTOM_NAME);
-        if (name == null || !(target instanceof ServerPlayer serverPlayer)) {
+        if (!(target instanceof ServerPlayer serverPlayer)) {
             return;
         }
 
-        ((RenamablePlayer) serverPlayer).verseplus$setSavedName(name.getString());
-        serverPlayer.setCustomName(Component.literal(name.getString()));
+        RenamablePlayer renamablePlayer = (RenamablePlayer) serverPlayer;
+        if (name == null) {
+            renamablePlayer.verseplus$setSavedName(null);
+            serverPlayer.setCustomName(null);
+        } else {
+            renamablePlayer.verseplus$setSavedName(name.getString());
+            serverPlayer.setCustomName(Component.literal(name.getString()));
+        }
+
         stack.shrink(1);
         cir.setReturnValue(InteractionResult.SUCCESS);
     }
