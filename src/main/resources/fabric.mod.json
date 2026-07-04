@@ -27,7 +27,8 @@
 		]
 	},
 	"mixins": [
-		"verseplus.mixins.json"
+		"verseplus.mixins.json",
+		"verseplus.snifferegg.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",

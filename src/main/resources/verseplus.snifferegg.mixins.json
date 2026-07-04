@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "io.github.brookite.verseplus.snifferegg.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "BlockItemMixin",
+    "BlockMixin",
+    "ItemStackMixin",
+    "SnifferEggBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

@@ -15,7 +15,6 @@
     "PlayerDropLoggerMixin",
     "PlayerDropMixin",
     "PlayerRenameMixin",
-    "SnifferEggBlockMixin",
     "SpiderRendererMixin",
     "SpiderSizesMixin",
     "TrueInvisibilityEffectMixin"
