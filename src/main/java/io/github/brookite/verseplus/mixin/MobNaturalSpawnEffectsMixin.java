@@ -56,7 +56,7 @@ public abstract class MobNaturalSpawnEffectsMixin extends LivingEntity {
         }
 
         BlockPos pos = blockPosition();
-        if (level.getMoonBrightness(pos) >= 1.0F
+        if (level.getMoonBrightness(pos) >= 1.0F && level.isDarkOutside()
                 && (level.getBiome(pos).is(Biomes.SWAMP) || level.getBiome(pos).is(Biomes.MANGROVE_SWAMP))) {
             addEffect(new MobEffectInstance(MobEffects.OOZING, PERMANENT_SPAWN_EFFECT_DURATION));
         }
