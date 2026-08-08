@@ -32,7 +32,8 @@
 		"verseplus.loyalpets.mixins.json",
 		"verseplus.spidersizes.mixins.json",
 		"verseplus.chainedrespawn.mixins.json",
-		"verseplus.loompatterns.mixins.json"
+		"verseplus.loompatterns.mixins.json",
+		"verseplus.obsidianboat.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",

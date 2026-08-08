@@ -1,6 +1,8 @@
 package io.github.brookite.verseplus.registries;
 
 import io.github.brookite.verseplus.VersePlus;
+import io.github.brookite.verseplus.features.obsidianboat.ObsidianBoatEntity;
+import io.github.brookite.verseplus.features.obsidianboat.ObsidianBoatItem;
 import io.github.brookite.verseplus.features.wardenstaff.WardenStaffItem;
 import io.github.brookite.verseplus.items.ChargedRareEnderPearlItem;
 import io.github.brookite.verseplus.items.FireEnderPearlItem;
@@ -48,6 +50,12 @@ public class RegisterItems {
                     .repairable(Items.ECHO_SHARD)
                     .rarity(Rarity.EPIC)
                     .useCooldown(30));
+    public static final Item OBSIDIAN_BOAT_ITEM = register("obsidian_boat",
+            properties -> new ObsidianBoatItem(RegisterEntities.OBSIDIAN_BOAT_ENTITY, properties),
+            new Item.Properties()
+                    .durability((int)ObsidianBoatEntity.MAX_TRAVEL_DISTANCE)
+                    .rarity(Rarity.RARE)
+                    .fireResistant());
 
     public static void initialize() {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(entries ->
@@ -64,5 +72,7 @@ public class RegisterItems {
                 entries.insertAfter(Items.ECHO_SHARD, RegisterItems.WARDEN_ROD));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->
                 entries.accept(RegisterItems.WARDEN_STAFF));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->
+                entries.insertAfter(Items.OAK_BOAT, RegisterItems.OBSIDIAN_BOAT_ITEM));
     }
 }

@@ -1,14 +1,17 @@
 package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.enums.SpiderVariant;
+import io.github.brookite.verseplus.features.obsidianboat.client.ObsidianBoatRenderer;
 import io.github.brookite.verseplus.registries.CustomEntityModelLayers;
 import io.github.brookite.verseplus.registries.RegisterBlocks;
+import io.github.brookite.verseplus.registries.RegisterEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.model.geom.builders.MeshTransformer;
 import net.minecraft.client.model.monster.spider.SpiderModel;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class VersePlusClient  implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         registerSpiders();
+        EntityRenderers.register(RegisterEntities.OBSIDIAN_BOAT_ENTITY, ObsidianBoatRenderer::new);
         BlockColorRegistry.register(List.of(BlockTintSources.grassBlock()), RegisterBlocks.GRASS_TRAP);
     }
 }

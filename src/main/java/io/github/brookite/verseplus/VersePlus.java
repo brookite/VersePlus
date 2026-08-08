@@ -26,6 +26,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,6 +132,15 @@ public class VersePlus implements ModInitializer {
         }));
     }
 
+    private void addNetherFortressBoatLoot() {
+        LootTableEvents.MODIFY_DROPS.register((entry, context, drops) -> entry.unwrapKey().ifPresent(key -> {
+            if (key.equals(BuiltInLootTables.NETHER_BRIDGE)
+                    && context.getRandom().nextFloat() < VersePlusChances.OBSIDIAN_BOAT_NETHER_FORTRESS_CHEST_LOOT) {
+                drops.add(new ItemStack(RegisterItems.OBSIDIAN_BOAT_ITEM));
+            }
+        }));
+    }
+
     private Map<Identifier, LootPool> getNewLoots() {
         var rarePearlStrongholdLoot = LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1))
@@ -158,6 +168,7 @@ public class VersePlus implements ModInitializer {
 
         extendVanillaLootTables(getNewLoots());
         modifyGhastMusicDiscDrops();
+        addNetherFortressBoatLoot();
 
         changeForestTrees();
         changeWindsweptSavannaClimate();

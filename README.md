@@ -23,6 +23,11 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - crafted from three echo shards and a Warden Rod dropped when a player kills a Warden
   - charges for 1.7 seconds before firing a through-wall sonic boom
   - has 64 durability and a 30-second cooldown after every completed shot
+- Obsidian Boats
+  - rarely found in Nether Fortress chests
+  - ride just above lava, travel more slowly than normal boats, and sink after 2500 blocks of lava travel
+  - sink in water and cannot be used there
+  - sit progressively lower in lava as their remaining travel resource decreases
 - Mannequin persistent nickname visibility
 - Players can be renamed with name tags
 - Baby spiders natural in adult spiders
