@@ -17,4 +17,6 @@ public class VersePlusChances {
     public static final float GHAST_MUSIC_DISC_CHANCE = 0.50f;
 
     public static final float FULL_MOON_EXTRA_WOLF_CHANCE = 0.25f;
+    public static final float FULL_MOON_EXTRA_ZOMBIE_CHANCE = 0.50f;
+    public static final int FULL_MOON_SIEGE_ZOMBIE_COUNT = 30;
 }

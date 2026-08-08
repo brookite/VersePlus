@@ -12,7 +12,9 @@
     "PlayerDropLoggerMixin",
     "PlayerDropMixin",
     "PlayerRenameMixin",
-    "TrueInvisibilityEffectMixin"
+    "TrueInvisibilityEffectMixin",
+    "VillageSiegeMixin",
+    "ZombieFullMoonSpawnMixin"
   ],
   "injectors": {
     "defaultRequire": 1
