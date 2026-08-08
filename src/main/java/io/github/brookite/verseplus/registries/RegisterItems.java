@@ -37,7 +37,7 @@ public class RegisterItems {
             new Item.Properties().useCooldown(1).stacksTo(16).rarity(Rarity.EPIC));
     public static final Item CHARGED_RARE_ENDER_PEARL_ITEM = register("charged_rare_ender_pearl_item",
             ChargedRareEnderPearlItem::new,
-            new Item.Properties().useCooldown(180).stacksTo(16).rarity(Rarity.EPIC));
+            new Item.Properties().useCooldown(120).stacksTo(16).rarity(Rarity.EPIC));
     public static final Item FROSTED_ICE_ITEM = register("frosted_ice",
             properties -> new BlockItem(Blocks.FROSTED_ICE, properties),
             new Item.Properties());
@@ -49,7 +49,7 @@ public class RegisterItems {
                     .enchantable(1)
                     .repairable(Items.ECHO_SHARD)
                     .rarity(Rarity.EPIC)
-                    .useCooldown(30));
+                    .useCooldown(20));
     public static final Item OBSIDIAN_BOAT_ITEM = register("obsidian_boat",
             properties -> new ObsidianBoatItem(RegisterEntities.OBSIDIAN_BOAT_ENTITY, properties),
             new Item.Properties()

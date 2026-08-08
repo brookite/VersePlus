@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -50,6 +51,11 @@ public class ObsidianBoatEntity extends Boat {
         super.tick();
 
         if (!level().isClientSide() && getTravelDistance() >= MAX_TRAVEL_DISTANCE) {
+            if (getFluidHeight(FluidTags.LAVA) > 0.0) {
+                for (Entity passenger : getPassengers()) {
+                    passenger.lavaIgnite();
+                }
+            }
             ejectPassengers();
             discard();
         }

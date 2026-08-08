@@ -24,6 +24,7 @@ public class WardenStaffItem extends Item {
     private static final int USE_DURATION = 72_000;
     private static final int CHARGE_TICKS = 34;
     private static final double RANGE = 15.0;
+    private static final float BEAM_RADIUS = 1.0F;
     private static final float DAMAGE = 10.0F;
     private static final double KNOCKBACK_VERTICAL = 0.5;
     private static final double KNOCKBACK_HORIZONTAL = 2.5;
@@ -93,12 +94,13 @@ public class WardenStaffItem extends Item {
         Vec3 maximumEnd = origin.add(look.scale(RANGE));
         AABB searchBox = player.getBoundingBox().expandTowards(look.scale(RANGE)).inflate(1.0);
         EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
+                level,
                 player,
                 origin,
                 maximumEnd,
                 searchBox,
                 entity -> isValidTarget(player, entity),
-                RANGE * RANGE
+                BEAM_RADIUS
         );
 
         LivingEntity target = hitResult != null && hitResult.getEntity() instanceof LivingEntity livingTarget

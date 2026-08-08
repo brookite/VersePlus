@@ -38,6 +38,6 @@ public class VersePlusClient  implements ClientModInitializer {
     public void onInitializeClient() {
         registerSpiders();
         EntityRenderers.register(RegisterEntities.OBSIDIAN_BOAT_ENTITY, ObsidianBoatRenderer::new);
-        BlockColorRegistry.register(List.of(BlockTintSources.grassBlock()), RegisterBlocks.GRASS_TRAP);
+        BlockColorRegistry.register(List.of(BlockTintSources.grass()), RegisterBlocks.GRASS_TRAP);
     }
 }
