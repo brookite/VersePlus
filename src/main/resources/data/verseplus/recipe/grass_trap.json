@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LGL",
+    "SGS",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:short_grass",
+    "L": "minecraft:tall_grass",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "verseplus:grass_trap",
+    "count": 1
+  }
+}

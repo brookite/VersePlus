@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:template",
+  "config": {
+    "templates": [
+      {
+        "data": {
+          "id": "verseplus:grass_trap_pit"
+        },
+        "weight": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "": [
+      { "model": "verseplus:block/grass_trap" },
+      { "model": "verseplus:block/grass_trap", "y": 90 },
+      { "model": "verseplus:block/grass_trap", "y": 180 },
+      { "model": "verseplus:block/grass_trap", "y": 270 }
+    ]
+  }
+}

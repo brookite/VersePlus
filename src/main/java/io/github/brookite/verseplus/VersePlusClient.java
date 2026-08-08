@@ -2,10 +2,15 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.enums.SpiderVariant;
 import io.github.brookite.verseplus.registries.CustomEntityModelLayers;
+import io.github.brookite.verseplus.registries.RegisterBlocks;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.model.geom.builders.MeshTransformer;
 import net.minecraft.client.model.monster.spider.SpiderModel;
+
+import java.util.List;
 
 public class VersePlusClient  implements ClientModInitializer {
     private void registerSpiders() {
@@ -28,6 +33,7 @@ public class VersePlusClient  implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-       registerSpiders();
+        registerSpiders();
+        BlockColorRegistry.register(List.of(BlockTintSources.grassBlock()), RegisterBlocks.GRASS_TRAP);
     }
 }

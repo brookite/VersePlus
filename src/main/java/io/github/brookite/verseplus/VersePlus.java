@@ -2,6 +2,7 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.features.loyalpets.LoyalPetsFeature;
 import io.github.brookite.verseplus.features.wardenstaff.WardenStaffFeature;
+import io.github.brookite.verseplus.registries.RegisterBlocks;
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterFeatures;
 import io.github.brookite.verseplus.registries.RegisterItems;
@@ -99,6 +100,17 @@ public class VersePlus implements ModInitializer {
         );
     }
 
+    private void addGrassTrapPits() {
+        BiomeModifications.addFeature(
+                BiomeSelectors.includeByKey(Biomes.PLAINS, Biomes.SUNFLOWER_PLAINS),
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                ResourceKey.create(
+                        Registries.PLACED_FEATURE,
+                        Identifier.fromNamespaceAndPath(MOD_ID, "grass_trap_pit")
+                )
+        );
+    }
+
     private void extendVanillaLootTables(Map<Identifier, LootPool> pools) {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
             var lootTable = resourceManager.identifier();
@@ -136,6 +148,7 @@ public class VersePlus implements ModInitializer {
 	public void onInitialize() {
         LoyalPetsFeature.initialize();
         RegisterFeatures.initialize();
+        RegisterBlocks.initialize();
         RegisterItems.initialize();
         WardenStaffFeature.initialize();
         RegisterPotions.initialize();
@@ -150,5 +163,6 @@ public class VersePlus implements ModInitializer {
         changeWindsweptSavannaClimate();
         addWarmOceanSpongePiles();
         addColdOceanSuspiciousFloorBlocks();
+        addGrassTrapPits();
     }
 }
