@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_warden_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "verseplus:warden_rod"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_warden_rod"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "verseplus:warden_staff"
+    ]
+  }
+}

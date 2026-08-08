@@ -1,6 +1,7 @@
 package io.github.brookite.verseplus.registries;
 
 import io.github.brookite.verseplus.VersePlus;
+import io.github.brookite.verseplus.features.wardenstaff.WardenStaffItem;
 import io.github.brookite.verseplus.items.ChargedRareEnderPearlItem;
 import io.github.brookite.verseplus.items.FireEnderPearlItem;
 import io.github.brookite.verseplus.items.ThrowableFireballItem;
@@ -38,6 +39,15 @@ public class RegisterItems {
     public static final Item FROSTED_ICE_ITEM = register("frosted_ice",
             properties -> new BlockItem(Blocks.FROSTED_ICE, properties),
             new Item.Properties());
+    public static final Item WARDEN_ROD = register("warden_rod", Item::new,
+            new Item.Properties().rarity(Rarity.RARE));
+    public static final Item WARDEN_STAFF = register("warden_staff", WardenStaffItem::new,
+            new Item.Properties()
+                    .durability(64)
+                    .enchantable(1)
+                    .repairable(Items.ECHO_SHARD)
+                    .rarity(Rarity.EPIC)
+                    .useCooldown(30));
 
     public static void initialize() {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(entries ->
@@ -50,5 +60,9 @@ public class RegisterItems {
                 entries.insertAfter(RegisterItems.FIRE_ENDER_PEARL_ITEM, RegisterItems.RARE_ENDER_PEARL_ITEM));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
                 entries.insertAfter(RegisterItems.RARE_ENDER_PEARL_ITEM, RegisterItems.CHARGED_RARE_ENDER_PEARL_ITEM));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
+                entries.insertAfter(Items.ECHO_SHARD, RegisterItems.WARDEN_ROD));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->
+                entries.accept(RegisterItems.WARDEN_STAFF));
     }
 }
