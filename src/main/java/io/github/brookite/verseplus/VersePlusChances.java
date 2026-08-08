@@ -15,4 +15,6 @@ public class VersePlusChances {
     public static final float EMPTY_SNIFFER_EGG_CHANCE = 0.10f;
     public static final float UNPICKABLE_GHAST_TEAR_CHANCE = 0.15f;
     public static final float GHAST_MUSIC_DISC_CHANCE = 0.50f;
+
+    public static final float FULL_MOON_EXTRA_WOLF_CHANCE = 0.25f;
 }
