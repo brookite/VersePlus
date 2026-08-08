@@ -1,7 +1,7 @@
-package io.github.brookite.verseplus.snifferegg.mixin;
+package io.github.brookite.verseplus.features.snifferegg.mixin;
 
-import io.github.brookite.verseplus.snifferegg.SnifferEggFertility;
-import io.github.brookite.verseplus.snifferegg.SnifferEggFertilitySavedData;
+import io.github.brookite.verseplus.features.snifferegg.SnifferEggFertility;
+import io.github.brookite.verseplus.features.snifferegg.SnifferEggFertilitySavedData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;

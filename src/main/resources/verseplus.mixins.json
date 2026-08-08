@@ -5,18 +5,13 @@
   "mixins": [
     "EndermanDropMixin",
     "GhastTearPickupDelayMixin",
-    "LoomScreenHandlerPatternLimitIncreaserMixin",
-    "LoomScreenPatternLimitIncreaserMixin",
     "MannequinNameMixin",
     "MobNaturalSpawnEffectsMixin",
     "NameTagItemPlayerRenameMixin",
-    "PlayerChainSpawnpointsMixin",
     "PlayerDropLifetimeIncreaserMixin",
     "PlayerDropLoggerMixin",
     "PlayerDropMixin",
     "PlayerRenameMixin",
-    "SpiderRendererMixin",
-    "SpiderSizesMixin",
     "TrueInvisibilityEffectMixin"
   ],
   "injectors": {

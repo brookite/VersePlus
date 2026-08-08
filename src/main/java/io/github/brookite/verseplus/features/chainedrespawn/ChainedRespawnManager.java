@@ -1,4 +1,4 @@
-package io.github.brookite.verseplus.interfaces;
+package io.github.brookite.verseplus.features.chainedrespawn;
 
 import net.minecraft.server.level.ServerPlayer;
 

@@ -1,5 +1,6 @@
-package io.github.brookite.verseplus.snifferegg;
+package io.github.brookite.verseplus.features.snifferegg;
 
+import io.github.brookite.verseplus.interfaces.ModFeature;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -8,7 +9,7 @@ import net.minecraft.world.item.component.CustomData;
 
 import static io.github.brookite.verseplus.VersePlusChances.EMPTY_SNIFFER_EGG_CHANCE;
 
-public final class SnifferEggFertility {
+public final class SnifferEggFertility implements ModFeature {
     private static final String INFERTILE_TAG = "verseplus:infertile_sniffer_egg";
 
     private SnifferEggFertility() {

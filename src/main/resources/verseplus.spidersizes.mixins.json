@@ -1,12 +1,12 @@
 {
   "required": true,
-  "package": "io.github.brookite.verseplus.features.snifferegg.mixin",
+  "package": "io.github.brookite.verseplus.features.spidersizes.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "BlockItemMixin",
-    "BlockMixin",
-    "ItemStackMixin",
-    "SnifferEggBlockMixin"
+    "SpiderSizesMixin"
+  ],
+  "client": [
+    "SpiderRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

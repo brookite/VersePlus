@@ -1,4 +1,4 @@
-package io.github.brookite.verseplus.snifferegg;
+package io.github.brookite.verseplus.features.snifferegg;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -14,6 +14,8 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Sponge piles in warm oceans
 - Suspicious sand and gravel in cold ocean floors
 - Some sniffer eggs may be empty (*10% chance*)
+- Tamed wolves and cats can recognize up to five additional owners after repeated feeding near their primary owner
+- Wolves can learn a goat horn sound and be recalled by that sound, even after their chunk unloads
 - Porting Bedrock (before 1.19.40) windswept savanna grass color
 - Player's drop NBT log (in world folder, `data/players_drop_graveyard.dat`)
 - Throwable fireball item

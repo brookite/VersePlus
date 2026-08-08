@@ -28,7 +28,11 @@
 	},
 	"mixins": [
 		"verseplus.mixins.json",
-		"verseplus.snifferegg.mixins.json"
+		"verseplus.snifferegg.mixins.json",
+		"verseplus.loyalpets.mixins.json",
+		"verseplus.spidersizes.mixins.json",
+		"verseplus.chainedrespawn.mixins.json",
+		"verseplus.loompatterns.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",

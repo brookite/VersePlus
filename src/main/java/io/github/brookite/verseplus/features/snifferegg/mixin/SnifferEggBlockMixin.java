@@ -1,6 +1,6 @@
-package io.github.brookite.verseplus.snifferegg.mixin;
+package io.github.brookite.verseplus.features.snifferegg.mixin;
 
-import io.github.brookite.verseplus.snifferegg.SnifferEggFertilitySavedData;
+import io.github.brookite.verseplus.features.snifferegg.SnifferEggFertilitySavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

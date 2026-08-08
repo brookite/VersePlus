@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "io.github.brookite.verseplus.features.loyalpets.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "TamableAnimalMixin",
+    "WolfMixin",
+    "CatMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

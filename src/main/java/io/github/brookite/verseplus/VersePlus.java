@@ -1,5 +1,6 @@
 package io.github.brookite.verseplus;
 
+import io.github.brookite.verseplus.features.loyalpets.LoyalPetsFeature;
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterFeatures;
 import io.github.brookite.verseplus.registries.RegisterItems;
@@ -132,6 +133,7 @@ public class VersePlus implements ModInitializer {
 
     @Override
 	public void onInitialize() {
+        LoyalPetsFeature.initialize();
         RegisterFeatures.initialize();
         RegisterItems.initialize();
         RegisterPotions.initialize();

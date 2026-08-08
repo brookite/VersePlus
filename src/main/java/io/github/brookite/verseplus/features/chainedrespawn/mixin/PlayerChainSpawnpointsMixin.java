@@ -1,7 +1,7 @@
-package io.github.brookite.verseplus.mixin;
+package io.github.brookite.verseplus.features.chainedrespawn.mixin;
 
 import com.mojang.serialization.Codec;
-import io.github.brookite.verseplus.interfaces.ChainedRespawnManager;
+import io.github.brookite.verseplus.features.chainedrespawn.ChainedRespawnManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

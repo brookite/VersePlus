@@ -1,4 +1,4 @@
-package io.github.brookite.verseplus.mixin;
+package io.github.brookite.verseplus.features.spidersizes.mixin;
 
 import io.github.brookite.verseplus.enums.SpiderVariant;
 import io.github.brookite.verseplus.interfaces.SizeableSpider;

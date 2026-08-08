@@ -1,4 +1,4 @@
-package io.github.brookite.verseplus.mixin;
+package io.github.brookite.verseplus.features.loompatterns.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.inventory.LoomMenu;
