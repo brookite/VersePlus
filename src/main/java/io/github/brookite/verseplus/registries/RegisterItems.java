@@ -35,7 +35,7 @@ public class RegisterItems {
             new Item.Properties().useCooldown(1).stacksTo(16).rarity(Rarity.EPIC));
     public static final Item CHARGED_RARE_ENDER_PEARL_ITEM = register("charged_rare_ender_pearl_item",
             ChargedRareEnderPearlItem::new,
-            new Item.Properties().useCooldown(15).stacksTo(16).rarity(Rarity.EPIC));
+            new Item.Properties().useCooldown(180).stacksTo(16).rarity(Rarity.EPIC));
     public static final Item FROSTED_ICE_ITEM = register("frosted_ice",
             properties -> new BlockItem(Blocks.FROSTED_ICE, properties),
             new Item.Properties());

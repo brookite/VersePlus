@@ -21,7 +21,6 @@ public class ChargedRareEnderPearlItem extends EnderpearlItem {
     }
 
     public InteractionResult use(Level world, Player user, InteractionHand hand) {
-        ItemStack itemStack = user.getItemInHand(hand);
         if (user instanceof ServerPlayer entity) {
             var vec3d = Vec3.atBottomCenterOf(entity.blockPosition());
             List<Monster> list = entity.level().getEntitiesOfClass(Monster.class,
@@ -42,7 +41,6 @@ public class ChargedRareEnderPearlItem extends EnderpearlItem {
             TeleportTransition target = entity.findRespawnPositionAndUseSpawnBlock(false, transition);
             entity.teleport(target);
         }
-        itemStack.consume(1, user);
         return InteractionResult.SUCCESS;
     }
 
