@@ -6,6 +6,7 @@ public class VersePlusChances {
 
     public static final float RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT = 0.07f;
     public static final float OBSIDIAN_BOAT_NETHER_FORTRESS_CHEST_LOOT = 0.05f;
+    public static final float CONTAINER_LOCK_STRUCTURE_CHEST_LOOT = 0.03f;
 
     public static final float PREGNANT_SPIDER_CHANCE = 0.035f;
     public static final int BABY_SPIDER_MAX_COUNT = 7;

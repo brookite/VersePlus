@@ -2,7 +2,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 
 *Current supported MC version:* **26.2**
 
-*Release status:* **0.9.3**
+*Release status:* **0.10.0-beta**
 
 ## Current Features
 - Increased up to 6x player's drop lifetime (30 minutes)
@@ -28,6 +28,12 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - ride just above lava, travel more slowly than normal boats, and sink after 2500 blocks of lava travel
   - sink in water and cannot be used there
   - sit progressively lower in lava as their remaining travel resource decreases
+- Container Locks
+  - rare copper, iron, and golden locks appear in shipwreck, village, abandoned-mineshaft, and ancient-city chests
+  - every lock contains a matching unique key; applying it to a chest or barrel installs the lock and returns that key
+  - craft any shulker box with a lock to preserve its contents and install the lock; closed shulkers hide their contents in tooltips
+  - use the matching key to close or open the container; clone a key with an ingot of its material
+  - broken chests and barrels drop their contents and installed lock, while shulker boxes keep their vanilla contents-preserving behavior
 - Mannequin persistent nickname visibility
 - Players can be renamed with name tags
 - Baby spiders natural in adult spiders

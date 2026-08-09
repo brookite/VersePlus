@@ -1,6 +1,9 @@
 package io.github.brookite.verseplus.registries;
 
 import io.github.brookite.verseplus.VersePlus;
+import io.github.brookite.verseplus.features.containerlocks.KeyItem;
+import io.github.brookite.verseplus.features.containerlocks.LockItem;
+import io.github.brookite.verseplus.features.containerlocks.LockMaterial;
 import io.github.brookite.verseplus.features.obsidianboat.ObsidianBoatEntity;
 import io.github.brookite.verseplus.features.obsidianboat.ObsidianBoatItem;
 import io.github.brookite.verseplus.features.wardenstaff.WardenStaffItem;
@@ -56,6 +59,24 @@ public class RegisterItems {
                     .durability((int)ObsidianBoatEntity.MAX_TRAVEL_DISTANCE)
                     .rarity(Rarity.RARE)
                     .fireResistant());
+    public static final Item COPPER_LOCK = register("copper_lock",
+            properties -> new LockItem(LockMaterial.COPPER, properties),
+            new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final Item IRON_LOCK = register("iron_lock",
+            properties -> new LockItem(LockMaterial.IRON, properties),
+            new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final Item GOLDEN_LOCK = register("golden_lock",
+            properties -> new LockItem(LockMaterial.GOLD, properties),
+            new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final Item COPPER_KEY = register("copper_key",
+            properties -> new KeyItem(LockMaterial.COPPER, properties),
+            new Item.Properties());
+    public static final Item IRON_KEY = register("iron_key",
+            properties -> new KeyItem(LockMaterial.IRON, properties),
+            new Item.Properties());
+    public static final Item GOLDEN_KEY = register("golden_key",
+            properties -> new KeyItem(LockMaterial.GOLD, properties),
+            new Item.Properties());
 
     public static void initialize() {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(entries ->
@@ -74,5 +95,13 @@ public class RegisterItems {
                 entries.accept(RegisterItems.WARDEN_STAFF));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->
                 entries.insertAfter(Items.OAK_BOAT, RegisterItems.OBSIDIAN_BOAT_ITEM));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> {
+            entries.accept(COPPER_LOCK.getDefaultInstance());
+            entries.accept(IRON_LOCK.getDefaultInstance());
+            entries.accept(GOLDEN_LOCK.getDefaultInstance());
+            entries.accept(COPPER_KEY.getDefaultInstance());
+            entries.accept(IRON_KEY.getDefaultInstance());
+            entries.accept(GOLDEN_KEY.getDefaultInstance());
+        });
     }
 }

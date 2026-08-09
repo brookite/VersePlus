@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "io.github.brookite.verseplus.features.containerlocks.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "BaseContainerBlockEntityMixin",
+    "ItemStackTooltipMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
