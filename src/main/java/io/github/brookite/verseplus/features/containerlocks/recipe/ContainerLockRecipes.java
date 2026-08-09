@@ -20,5 +20,10 @@ public final class ContainerLockRecipes {
                 Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, "shulker_locking"),
                 ShulkerLockRecipe.SERIALIZER
         );
+        Registry.register(
+                BuiltInRegistries.RECIPE_SERIALIZER,
+                Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, "button_locking"),
+                ButtonLockRecipe.SERIALIZER
+        );
     }
 }

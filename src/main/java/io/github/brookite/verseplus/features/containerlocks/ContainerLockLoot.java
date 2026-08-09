@@ -2,9 +2,11 @@ package io.github.brookite.verseplus.features.containerlocks;
 
 import io.github.brookite.verseplus.VersePlusChances;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -57,6 +59,24 @@ final class ContainerLockLoot {
             if (!key.identifier().getPath().startsWith("blocks/")) {
                 return;
             }
+
+            var origin = context.getOptionalParameter(LootContextParams.ORIGIN);
+            var droppedState = context.getOptionalParameter(LootContextParams.BLOCK_STATE);
+            if (origin != null && droppedState != null && droppedState.getBlock() instanceof ButtonBlock) {
+                BlockPos pos = BlockPos.containing(origin);
+                LockData buttonLock = ButtonLockSavedData.get(context.getLevel()).getLock(pos);
+                if (buttonLock != null) {
+                    for (ItemStack drop : drops) {
+                        if (drop.getItem() instanceof BlockItem blockItem
+                                && blockItem.getBlock() instanceof ButtonBlock) {
+                            drop.set(ContainerLockComponents.LOCK_DATA, buttonLock.installed(buttonLock.closed()));
+                            break;
+                        }
+                    }
+                    ButtonLockSavedData.get(context.getLevel()).removeLock(pos);
+                }
+            }
+
             BaseContainerBlockEntity container = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
                     instanceof BaseContainerBlockEntity baseContainer ? baseContainer : null;
             if (container == null) {

@@ -1,11 +1,13 @@
 package io.github.brookite.verseplus.features.containerlocks;
 
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BarrelBlock;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -33,6 +36,11 @@ final class ContainerLockInteraction {
     static void initialize() {
         UseBlockCallback.EVENT.register(ContainerLockInteraction::interact);
         AttackBlockCallback.EVENT.register(ContainerLockInteraction::attack);
+        PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
+            if (state.getBlock() instanceof ButtonBlock && level instanceof ServerLevel serverLevel) {
+                ButtonLockSavedData.get(serverLevel).removeLock(pos);
+            }
+        });
     }
 
     private static InteractionResult attack(
@@ -77,11 +85,18 @@ final class ContainerLockInteraction {
     private static InteractionResult interact(Player player, Level level, net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
         BlockPos pos = hit.getBlockPos();
         BlockState state = level.getBlockState(pos);
-        if (!isSupported(state) || player.isSpectator()) {
+        if (player.isSpectator()) {
             return InteractionResult.PASS;
         }
 
         ItemStack heldStack = player.getItemInHand(hand);
+        if (state.getBlock() instanceof ButtonBlock) {
+            return interactWithButton(player, level, pos, heldStack);
+        }
+
+        if (!isSupportedContainer(state)) {
+            return InteractionResult.PASS;
+        }
         if (!(heldStack.getItem() instanceof LockItem) && !(heldStack.getItem() instanceof KeyItem)) {
             return InteractionResult.PASS;
         }
@@ -94,6 +109,84 @@ final class ContainerLockInteraction {
             return installLock(player, level, pos, state, heldStack, lockItem);
         }
         return toggleLock(player, level, pos, state, heldStack);
+    }
+
+    private static InteractionResult interactWithButton(
+            Player player,
+            Level level,
+            BlockPos pos,
+            ItemStack heldStack
+    ) {
+        if (level.isClientSide()) {
+            return heldStack.getItem() instanceof LockItem || heldStack.getItem() instanceof KeyItem
+                    ? InteractionResult.SUCCESS
+                    : InteractionResult.PASS;
+        }
+
+        ButtonLockSavedData savedData = ButtonLockSavedData.get((ServerLevel) level);
+        LockData installed = savedData.getLock(pos);
+        if (installed == null) {
+            if (heldStack.getItem() instanceof LockItem lockItem) {
+                return installButtonLock(player, level, pos, heldStack, lockItem, savedData);
+            }
+            return InteractionResult.PASS;
+        }
+
+        if (heldStack.getItem() instanceof KeyItem) {
+            if (!ContainerLocks.matches(heldStack, installed)) {
+                player.sendOverlayMessage(Component.translatable("message.verseplus.lock.button_requires_key"));
+                return InteractionResult.SUCCESS;
+            }
+
+            LockData toggled = installed.toggled();
+            savedData.setLock(pos, toggled);
+            level.playSound(
+                    null,
+                    pos,
+                    toggled.closed() ? SoundEvents.IRON_TRAPDOOR_CLOSE : SoundEvents.IRON_TRAPDOOR_OPEN,
+                    SoundSource.BLOCKS,
+                    0.8F,
+                    1.0F
+            );
+            player.sendOverlayMessage(Component.translatable(
+                    toggled.closed() ? "message.verseplus.lock.closed" : "message.verseplus.lock.opened"
+            ));
+            return InteractionResult.SUCCESS;
+        }
+
+        if (installed.closed()) {
+            player.sendOverlayMessage(Component.translatable("message.verseplus.lock.button_requires_key"));
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    private static InteractionResult installButtonLock(
+            Player player,
+            Level level,
+            BlockPos pos,
+            ItemStack lockStack,
+            LockItem lockItem,
+            ButtonLockSavedData savedData
+    ) {
+        LockData data = lockStack.get(ContainerLockComponents.LOCK_DATA);
+        if (data == null || data.material() != lockItem.material()) {
+            player.sendOverlayMessage(Component.translatable("message.verseplus.lock.invalid"));
+            return InteractionResult.SUCCESS;
+        }
+
+        savedData.setLock(pos, data.installed(false));
+        lockStack.consume(1, player);
+        if (data.containsKey()) {
+            ItemStack key = ContainerLocks.createKey(data);
+            if (!player.getInventory().add(key) && !key.isEmpty()) {
+                player.drop(key, false);
+            }
+        }
+
+        level.playSound(null, pos, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        player.sendOverlayMessage(Component.translatable("message.verseplus.lock.button_installed"));
+        return InteractionResult.SUCCESS;
     }
 
     private static InteractionResult installLock(
@@ -204,7 +297,7 @@ final class ContainerLockInteraction {
         container.setChanged();
     }
 
-    private static boolean isSupported(BlockState state) {
+    private static boolean isSupportedContainer(BlockState state) {
         return state.getBlock() instanceof ChestBlock
                 || state.getBlock() instanceof BarrelBlock
                 || state.getBlock() instanceof ShulkerBoxBlock;

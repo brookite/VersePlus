@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "BaseContainerBlockEntityMixin",
+    "BlockItemMixin",
+    "ButtonBlockMixin",
     "ItemStackTooltipMixin"
   ],
   "injectors": {

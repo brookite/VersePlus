@@ -1,6 +1,7 @@
 package io.github.brookite.verseplus.features.containerlocks.mixin;
 
 import io.github.brookite.verseplus.features.containerlocks.ContainerLockComponents;
+import io.github.brookite.verseplus.features.containerlocks.ContainerLocks;
 import io.github.brookite.verseplus.features.containerlocks.LockData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.ButtonBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -39,6 +41,16 @@ public abstract class ItemStackTooltipMixin {
         boolean isShulker = stack.getItem() instanceof BlockItem blockItem
                 && blockItem.getBlock() instanceof ShulkerBoxBlock;
         LockData data = stack.get(ContainerLockComponents.LOCK_DATA);
+        boolean isButton = stack.getItem() instanceof BlockItem blockItem
+                && blockItem.getBlock() instanceof ButtonBlock;
+        if (isButton && data != null) {
+            stack.addToTooltip(type, context, display, builder, flag);
+            builder.accept(Component.translatable(
+                    data.closed() ? "tooltip.verseplus.lock.button_closed" : "tooltip.verseplus.lock.button_open"
+            ).withStyle(data.closed() ? ChatFormatting.RED : ChatFormatting.GREEN));
+            builder.accept(ContainerLocks.fingerprintTooltip(data));
+            return;
+        }
         if (!isShulker || data == null) {
             stack.addToTooltip(type, context, display, builder, flag);
             return;
