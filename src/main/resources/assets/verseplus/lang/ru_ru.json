@@ -34,5 +34,9 @@
   "verseplus.rarepearl.transition": "Вы переместились на место вашего возрождения",
   "verseplus.rarepearl.transition_failed": "В настоящее время перемещение на место возрождения невозможно из-за опасностей вокруг вас",
   "advancement.verseplus.collect_all_discs.title": "Коллекционер-музыкант",
-  "advancement.verseplus.collect_all_discs.description": "Собрать все музыкальные пластинки"
+  "advancement.verseplus.collect_all_discs.description": "Собрать все музыкальные пластинки",
+  "advancement.verseplus.collect_all_ores.title": "Рудный коллекционер",
+  "advancement.verseplus.collect_all_ores.description": "Собрать все рудные блоки, включая глубинные",
+  "advancement.verseplus.collect_all_mob_heads.title": "Охотник за головами",
+  "advancement.verseplus.collect_all_mob_heads.description": "Собрать головы всех мобов, кроме игрока"
 }

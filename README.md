@@ -36,6 +36,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - broken chests and barrels drop their contents and installed lock, while shulker boxes keep their vanilla contents-preserving behavior
 - Mannequin persistent nickname visibility
 - Players can be renamed with name tags
+- Collection challenges for every ore block, every non-player mob head, and every music disc
 - Baby spiders natural in adult spiders
 - Spiders can naturally spawn with Weaving at night (*7% chance*)
 - Mobs naturally spawned in swamps under full moon get Oozing

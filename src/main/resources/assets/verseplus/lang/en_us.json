@@ -34,5 +34,9 @@
   "item.minecraft.lingering_potion.effect.true_invisibility": "Lingering Potion of Invisibility",
   "verseplus.rarepearl.transition_failed": "Currently, moving to the respawn location is not possible due to the hostiles around you",
   "advancement.verseplus.collect_all_discs.title": "Musician & Collector",
-  "advancement.verseplus.collect_all_discs.description": "Collect all music discs"
+  "advancement.verseplus.collect_all_discs.description": "Collect all music discs",
+  "advancement.verseplus.collect_all_ores.title": "Ore Collector",
+  "advancement.verseplus.collect_all_ores.description": "Collect every ore block, including deepslate variants",
+  "advancement.verseplus.collect_all_mob_heads.title": "Head Hunter",
+  "advancement.verseplus.collect_all_mob_heads.description": "Collect every mob head except a player head"
 }

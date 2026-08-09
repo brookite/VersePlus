@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": { "id": "minecraft:wither_skeleton_skull" },
+    "title": { "translate": "advancement.verseplus.collect_all_mob_heads.title" },
+    "description": { "translate": "advancement.verseplus.collect_all_mob_heads.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "skeleton_skull": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:skeleton_skull"] }] } },
+    "wither_skeleton_skull": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:wither_skeleton_skull"] }] } },
+    "zombie_head": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:zombie_head"] }] } },
+    "creeper_head": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:creeper_head"] }] } },
+    "dragon_head": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:dragon_head"] }] } },
+    "piglin_head": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["minecraft:piglin_head"] }] } }
+  },
+  "requirements": [
+    ["skeleton_skull"],
+    ["wither_skeleton_skull"],
+    ["zombie_head"],
+    ["creeper_head"],
+    ["dragon_head"],
+    ["piglin_head"]
+  ],
+  "rewards": { "experience": 120 }
+}
