@@ -3,10 +3,12 @@
   "package": "io.github.brookite.verseplus.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "accessor.LootPoolSingletonContainerAccessor",
     "EndermanDropMixin",
     "GhastTearPickupDelayMixin",
     "MannequinNameMixin",
     "MobNaturalSpawnEffectsMixin",
+    "LootEntryDefaultQualityMixin",
     "NameTagItemPlayerRenameMixin",
     "PlayerDropLifetimeIncreaserMixin",
     "PlayerDropLoggerMixin",
@@ -21,5 +23,5 @@
   },
   "overwrites": {
     "requireAnnotations": true
-	}
+  }
 }
