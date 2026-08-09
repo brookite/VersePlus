@@ -32,6 +32,8 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - rare copper, iron, and golden locks appear in shipwreck, village, abandoned-mineshaft, and ancient-city chests
   - every lock contains a matching unique key; applying it to a chest or barrel installs the lock and returns that key
   - craft any shulker box with a lock to preserve its contents and install the lock; closed shulkers hide their contents in tooltips
+  - apply a lock to any button, or craft them together, to install a permanent open lock; its matching key toggles access without pressing the button
+  - closed button locks block hand, arrow, and explosion activation; broken buttons retain their lock and current state
   - use the matching key to close or open the container; clone a key with an ingot of its material
   - broken chests and barrels drop their contents and installed lock, while shulker boxes keep their vanilla contents-preserving behavior
 - Mannequin persistent nickname visibility
