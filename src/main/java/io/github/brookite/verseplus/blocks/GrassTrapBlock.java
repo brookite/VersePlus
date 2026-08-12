@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GrassTrapBlock extends Block {
     private static final int CHAIN_REACTION_DELAY_TICKS = 2;
-    private static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    private static final VoxelShape SHAPE = Block.box(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
 
     public GrassTrapBlock(BlockBehaviour.Properties properties) {
         super(properties);
