@@ -1,7 +1,6 @@
 package io.github.brookite.verseplus.features.loyalpets.recall;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Relative;
@@ -69,11 +68,6 @@ public final class PetTeleportation {
             return null;
         }
 
-        if (pet.level() instanceof ServerLevel sourceLevel) {
-            sourceLevel.sendParticles(ParticleTypes.PORTAL, pet.getX(), pet.getY() + 0.5, pet.getZ(),
-                    24, 0.4, 0.4, 0.4, 0.1);
-        }
-
         var transition = new TeleportTransition(
                 targetLevel,
                 new Vec3(x, y, z),
@@ -85,8 +79,6 @@ public final class PetTeleportation {
         );
         if (pet.teleport(transition) instanceof TamableAnimal teleported) {
             teleported.getNavigation().stop();
-            targetLevel.sendParticles(ParticleTypes.PORTAL, x, y + 0.5, z,
-                    24, 0.4, 0.4, 0.4, 0.1);
             return teleported;
         }
         return null;
