@@ -1,10 +1,25 @@
 {
-  "variants": {
-    "": [
-      { "model": "verseplus:block/grass_trap" },
-      { "model": "verseplus:block/grass_trap", "y": 90 },
-      { "model": "verseplus:block/grass_trap", "y": 180 },
-      { "model": "verseplus:block/grass_trap", "y": 270 }
-    ]
-  }
+  "multipart": [
+    {
+      "when": { "type": "top" },
+      "apply": [
+        { "model": "verseplus:block/grass_trap" },
+        { "model": "verseplus:block/grass_trap", "y": 90 },
+        { "model": "verseplus:block/grass_trap", "y": 180 },
+        { "model": "verseplus:block/grass_trap", "y": 270 }
+      ]
+    },
+    {
+      "when": { "type": "bottom" },
+      "apply": { "model": "verseplus:block/grass_trap_bottom" }
+    },
+    {
+      "when": { "type": "double" },
+      "apply": { "model": "verseplus:block/grass_trap" }
+    },
+    {
+      "when": { "type": "double" },
+      "apply": { "model": "verseplus:block/grass_trap_bottom" }
+    }
+  ]
 }

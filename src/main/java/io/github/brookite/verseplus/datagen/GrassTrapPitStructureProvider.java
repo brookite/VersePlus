@@ -12,6 +12,8 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.properties.SlabType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -98,7 +100,13 @@ public final class GrassTrapPitStructureProvider implements DataProvider {
         palette.add(blockState("minecraft:pointed_dripstone", pointedDripstoneProperties));
 
         palette.add(blockState("minecraft:air"));
-        palette.add(blockState("verseplus:grass_trap"));
+        // The heightmap position is the air block above the grass surface. The placement
+        // modifier shifts the template origin down 11 blocks, so this top slab at y=10
+        // replaces grass and finishes at the same y level as its neighbors.
+        CompoundTag grassTrapProperties = new CompoundTag();
+        grassTrapProperties.putString(SlabBlock.TYPE.getName(), SlabType.TOP.getSerializedName());
+        grassTrapProperties.putString(SlabBlock.WATERLOGGED.getName(), "false");
+        palette.add(blockState("verseplus:grass_trap", grassTrapProperties));
         return palette;
     }
 
