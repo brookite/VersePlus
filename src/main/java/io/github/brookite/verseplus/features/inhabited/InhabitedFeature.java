@@ -9,22 +9,18 @@ import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.visitors.CollectFields;
 import net.minecraft.nbt.visitors.FieldSelector;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.Permissions;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.storage.RegionFile;
-import net.minecraft.world.level.chunk.storage.RegionStorageInfo;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.storage.ChunkScanAccess;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.LevelResource;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.file.Files;
@@ -36,9 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -58,20 +52,15 @@ public final class InhabitedFeature {
             "minecraft:shulker_box",
             "minecraft:trapped_chest"
     );
-    private static final AtomicBoolean SCAN_RUNNING = new AtomicBoolean();
-    private static final ExecutorService SCAN_EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
-        Thread thread = new Thread(runnable, "VersePlus inhabited scanner");
-        thread.setDaemon(true);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        return thread;
-    });
+    private static final Object SCAN_LOCK = new Object();
+    private static Thread activeScan;
 
     private InhabitedFeature() {
     }
 
     public static void initialize() {
         CommandRegistrationCallback.EVENT.register(InhabitedFeature::registerCommand);
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> SCAN_EXECUTOR.shutdownNow());
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> cancelScan());
     }
 
     private static void registerCommand(
@@ -85,41 +74,74 @@ public final class InhabitedFeature {
     }
 
     private static int startScan(CommandSourceStack source) {
-        if (!SCAN_RUNNING.compareAndSet(false, true)) {
-            source.sendFailure(Component.translatable("commands.verseplus.inhabited.already_running"));
-            return 0;
-        }
-
         MinecraftServer server = source.getServer();
         List<DimensionScan> dimensions = snapshotDimensions(server);
-        source.sendSuccess(() -> Component.translatable("commands.verseplus.inhabited.started"), false);
-        SCAN_EXECUTOR.execute(() -> {
-            ScanResult result;
-            try {
-                result = scan(dimensions);
-            } catch (InterruptedIOException exception) {
-                Thread.currentThread().interrupt();
-                result = ScanResult.cancelledResult();
-            } catch (Exception exception) {
-                VersePlus.LOGGER.error("Failed to scan inhabited chunks", exception);
-                result = ScanResult.failedResult();
+        Thread scanThread = new Thread(() -> runScan(source, server, dimensions), "VersePlus inhabited scanner");
+        scanThread.setDaemon(true);
+        scanThread.setPriority(Thread.MIN_PRIORITY);
+        synchronized (SCAN_LOCK) {
+            if (activeScan != null) {
+                source.sendFailure(Component.translatable("commands.verseplus.inhabited.already_running"));
+                return 0;
             }
+            activeScan = scanThread;
+        }
 
+        source.sendSuccess(() -> Component.translatable("commands.verseplus.inhabited.started"), false);
+        scanThread.start();
+        return 1;
+    }
+
+    private static void runScan(CommandSourceStack source, MinecraftServer server, List<DimensionScan> dimensions) {
+        ScanResult result;
+        try {
+            result = scan(dimensions);
+        } catch (InterruptedIOException exception) {
+            Thread.currentThread().interrupt();
+            result = ScanResult.cancelledResult();
+        } catch (Exception exception) {
+            VersePlus.LOGGER.error("Failed to scan inhabited chunks", exception);
+            result = ScanResult.failedResult();
+        }
+
+        boolean shouldDeliver;
+        synchronized (SCAN_LOCK) {
+            shouldDeliver = activeScan == Thread.currentThread();
+            if (shouldDeliver) {
+                activeScan = null;
+            }
+        }
+        if (shouldDeliver && server.isRunning()) {
             ScanResult completedResult = result;
             server.execute(() -> {
-                SCAN_RUNNING.set(false);
-                sendResult(source, completedResult);
+                if (server.isRunning()) {
+                    sendResult(source, completedResult);
+                }
             });
-        });
-        return 1;
+        }
+    }
+
+    private static void cancelScan() {
+        Thread scanThread;
+        synchronized (SCAN_LOCK) {
+            scanThread = activeScan;
+            activeScan = null;
+        }
+        if (scanThread != null) {
+            scanThread.interrupt();
+        }
     }
 
     private static List<DimensionScan> snapshotDimensions(MinecraftServer server) {
         Path worldRoot = server.getWorldPath(LevelResource.ROOT);
         List<DimensionScan> dimensions = new ArrayList<>();
-        for (var level : server.getAllLevels()) {
+        for (ServerLevel level : server.getAllLevels()) {
             Path regionDirectory = DimensionType.getStorageFolder(level.dimension(), worldRoot).resolve("region");
-            dimensions.add(new DimensionScan(level.dimension(), level.dimension().identifier().toString(), regionDirectory));
+            dimensions.add(new DimensionScan(
+                    level.dimension().identifier().toString(),
+                    regionDirectory,
+                    level.getChunkSource().chunkScanner()
+            ));
         }
         return List.copyOf(dimensions);
     }
@@ -154,58 +176,60 @@ public final class InhabitedFeature {
         int regionX = Integer.parseInt(matcher.group(1));
         int regionZ = Integer.parseInt(matcher.group(2));
         int unreadableChunks = 0;
-        RegionStorageInfo storageInfo = new RegionStorageInfo("inhabited-scan", dimension.key(), "chunk");
-        try (RegionFile region = new RegionFile(storageInfo, regionPath, dimension.regionDirectory(), false)) {
-            for (int localZ = 0; localZ < 32; localZ++) {
-                for (int localX = 0; localX < 32; localX++) {
-                    try {
-                        ChunkCandidate candidate = readChunk(
-                                region,
-                                dimension.id(),
-                                regionX * 32 + localX,
-                                regionZ * 32 + localZ
-                        );
-                        if (candidate != null) {
-                            candidates.add(candidate);
-                        }
-                    } catch (IOException exception) {
-                        unreadableChunks++;
-                        VersePlus.LOGGER.warn("Could not read chunk {}, {} from {}", regionX * 32 + localX, regionZ * 32 + localZ, regionPath);
+        for (int localZ = 0; localZ < 32; localZ++) {
+            for (int localX = 0; localX < 32; localX++) {
+                try {
+                    ChunkCandidate candidate = readChunk(
+                            dimension.scanner(),
+                            dimension.id(),
+                            regionX * 32 + localX,
+                            regionZ * 32 + localZ
+                    );
+                    if (candidate != null) {
+                        candidates.add(candidate);
                     }
-                    throttle();
+                } catch (InterruptedIOException exception) {
+                    throw exception;
+                } catch (IOException exception) {
+                    unreadableChunks++;
+                    VersePlus.LOGGER.warn("Could not read chunk {}, {} from {}", regionX * 32 + localX, regionZ * 32 + localZ, regionPath);
                 }
+                throttle();
             }
         }
         return unreadableChunks;
     }
 
-    private static ChunkCandidate readChunk(RegionFile region, String dimension, int chunkX, int chunkZ) throws IOException {
-        try (DataInputStream input = region.getChunkDataInputStream(new net.minecraft.world.level.ChunkPos(chunkX, chunkZ))) {
-            if (input == null) {
-                return null;
-            }
-
-            CollectFields fields = new CollectFields(
-                    new FieldSelector(LongTag.TYPE, "InhabitedTime"),
-                    new FieldSelector(ListTag.TYPE, "block_entities")
-            );
-            NbtIo.parse(input, fields, NbtAccounter.unlimitedHeap());
-            Tag parsed = fields.getResult();
-            if (!(parsed instanceof CompoundTag chunk)) {
-                return null;
-            }
-
-            long inhabitedTime = chunk.getLongOr("InhabitedTime", 0L);
-            if (inhabitedTime < MINIMUM_INHABITED_TIME) {
-                return null;
-            }
-            int filledContainers = chunk.getList("block_entities")
-                    .stream()
-                    .flatMap(ListTag::compoundStream)
-                    .mapToInt(blockEntity -> isFilledPlayerStorage(blockEntity) ? 1 : 0)
-                    .sum();
-            return new ChunkCandidate(dimension, chunkX, chunkZ, inhabitedTime, filledContainers);
+    private static ChunkCandidate readChunk(ChunkScanAccess scanner, String dimension, int chunkX, int chunkZ) throws IOException {
+        // Use the world's IOWorker so reads are serialized with pending chunk saves.
+        CollectFields fields = new CollectFields(
+                new FieldSelector(LongTag.TYPE, "InhabitedTime"),
+                new FieldSelector(ListTag.TYPE, "block_entities")
+        );
+        try {
+            scanner.scanChunk(new ChunkPos(chunkX, chunkZ), fields).get();
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new InterruptedIOException("Inhabited scan interrupted");
+        } catch (ExecutionException exception) {
+            throw new IOException("Could not scan chunk [" + chunkX + ", " + chunkZ + "]", exception.getCause());
         }
+
+        Tag parsed = fields.getResult();
+        if (!(parsed instanceof CompoundTag chunk)) {
+            return null;
+        }
+
+        long inhabitedTime = chunk.getLongOr("InhabitedTime", 0L);
+        if (inhabitedTime < MINIMUM_INHABITED_TIME) {
+            return null;
+        }
+        int filledContainers = chunk.getList("block_entities")
+                .stream()
+                .flatMap(ListTag::compoundStream)
+                .mapToInt(blockEntity -> isFilledPlayerStorage(blockEntity) ? 1 : 0)
+                .sum();
+        return new ChunkCandidate(dimension, chunkX, chunkZ, inhabitedTime, filledContainers);
     }
 
     private static boolean isFilledPlayerStorage(CompoundTag blockEntity) {
@@ -309,7 +333,7 @@ public final class InhabitedFeature {
         }
     }
 
-    private record DimensionScan(ResourceKey<Level> key, String id, Path regionDirectory) {
+    private record DimensionScan(String id, Path regionDirectory, ChunkScanAccess scanner) {
     }
 
     private record ChunkCandidate(String dimension, int chunkX, int chunkZ, long inhabitedTime, int filledContainers) {
