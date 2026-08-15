@@ -40,6 +40,9 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Players can be renamed with name tags
 - Player waypoint editing
   - create, remove, and style named points at the command executor's current position; coordinate arguments are not accepted
+  - `/waypoint list` is available to every player and also works for connection-local points on servers without VersePlus
+  - retain the complete vanilla entity `modify` command; personal points use the unambiguous `modify personal <name>` branch
+  - optionally choose a named color directly after `add`, or use `hex <RRGGBB>`
   - everyone may use their own points, while operators can target players with selectors such as `@s` and `@a`
   - on servers without VersePlus, named points remain local to the current connection
 - Operator-only `/inhabited` scans saved region files in the background and reports clusters of long-inhabited areas without loading or generating chunks

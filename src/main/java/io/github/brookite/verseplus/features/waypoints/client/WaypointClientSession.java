@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.scores.TeamColor;
@@ -46,21 +47,33 @@ public final class WaypointClientSession {
         if (player == null || ClientPlayNetworking.canSend(WaypointSupportPayload.TYPE)) {
             return false;
         }
-        if (arguments.length < 3) {
+        if (arguments.length < 2) {
             sendUsage(player);
             return true;
         }
 
-        String name = normalizeName(arguments[2]);
+        String action = arguments[1].toLowerCase(Locale.ROOT);
+        if (action.equals("list")) {
+            return list(player, arguments);
+        }
+        if (action.equals("modify") && (arguments.length <= 2 || !arguments[2].equalsIgnoreCase("personal"))) {
+            return false;
+        }
+        int nameIndex = action.equals("modify") ? 3 : 2;
+        if (arguments.length <= nameIndex) {
+            sendUsage(player);
+            return true;
+        }
+        String name = normalizeName(arguments[nameIndex]);
         if (name == null) {
             sendFailure(player, "commands.verseplus.waypoint.invalid_name");
             return true;
         }
 
-        return switch (arguments[1].toLowerCase(Locale.ROOT)) {
+        return switch (action) {
             case "add" -> add(client, player, name, arguments);
             case "remove" -> remove(client, player, name, arguments);
-            case "modify" -> modify(client, player, name, arguments);
+            case "modify" -> modify(client, player, name, arguments, nameIndex);
             default -> {
                 sendUsage(player);
                 yield true;
@@ -69,18 +82,72 @@ public final class WaypointClientSession {
     }
 
     private static boolean add(Minecraft client, LocalPlayer player, String name, String[] arguments) {
-        if (!hasOnlySelfSelector(arguments, 3)) {
+        int colorIndex = arguments.length > 3 && arguments[3].equalsIgnoreCase("@s") ? 4 : 3;
+        LocalWaypoint existing = WAYPOINTS.get(name);
+        Waypoint.Icon icon = existing == null ? new Waypoint.Icon() : copyIcon(existing.icon());
+        if (!applyOptionalAddColor(icon, arguments, colorIndex)) {
             sendUsage(player);
             return true;
         }
-        if (!WAYPOINTS.containsKey(name) && WAYPOINTS.size() >= MAX_WAYPOINTS) {
+        if (existing == null && WAYPOINTS.size() >= MAX_WAYPOINTS) {
             sendFailure(player, "commands.verseplus.waypoint.limit_reached");
             return true;
         }
-        LocalWaypoint waypoint = new LocalWaypoint(player.blockPosition(), new Waypoint.Icon());
+        LocalWaypoint waypoint = new LocalWaypoint(player.blockPosition(), icon);
         WAYPOINTS.put(name, waypoint);
         track(client, player, name, waypoint);
         player.sendSystemMessage(Component.translatable("commands.verseplus.waypoint.local_saved"));
+        return true;
+    }
+
+    private static Waypoint.Icon copyIcon(Waypoint.Icon source) {
+        Waypoint.Icon copy = new Waypoint.Icon();
+        copy.style = source.style;
+        copy.color = source.color;
+        return copy;
+    }
+
+    private static boolean applyOptionalAddColor(Waypoint.Icon icon, String[] arguments, int colorIndex) {
+        if (arguments.length == colorIndex) {
+            return true;
+        }
+        if (arguments[colorIndex].equalsIgnoreCase("hex") && arguments.length == colorIndex + 2) {
+            String hex = arguments[colorIndex + 1].startsWith("#") ? arguments[colorIndex + 1].substring(1) : arguments[colorIndex + 1];
+            if (hex.matches("[0-9a-fA-F]{6}")) {
+                icon.color = java.util.Optional.of(Integer.parseInt(hex, 16));
+                return true;
+            }
+            return false;
+        }
+        TeamColor color = TeamColor.byName(arguments[colorIndex]);
+        if (color == null || arguments.length != colorIndex + 1) {
+            return false;
+        }
+        icon.color = java.util.Optional.of(color.rgb());
+        return true;
+    }
+
+    private static boolean list(LocalPlayer player, String[] arguments) {
+        if (arguments.length != 2) {
+            sendUsage(player);
+            return true;
+        }
+        if (WAYPOINTS.isEmpty()) {
+            player.sendSystemMessage(Component.translatable("commands.verseplus.waypoint.list.local_empty"));
+            return true;
+        }
+        player.sendSystemMessage(Component.translatable("commands.verseplus.waypoint.list.header", WAYPOINTS.size()));
+        WAYPOINTS.forEach((name, waypoint) -> {
+            MutableComponent displayName = Component.literal(name);
+            waypoint.icon().color.ifPresent(displayName::withColor);
+            player.sendSystemMessage(Component.translatable(
+                    "commands.verseplus.waypoint.list.local_entry",
+                    displayName,
+                    waypoint.position().getX(),
+                    waypoint.position().getY(),
+                    waypoint.position().getZ()
+            ));
+        });
         return true;
     }
 
@@ -100,8 +167,8 @@ public final class WaypointClientSession {
         return true;
     }
 
-    private static boolean modify(Minecraft client, LocalPlayer player, String name, String[] arguments) {
-        int actionIndex = arguments.length > 3 && arguments[3].equalsIgnoreCase("@s") ? 4 : 3;
+    private static boolean modify(Minecraft client, LocalPlayer player, String name, String[] arguments, int nameIndex) {
+        int actionIndex = arguments.length > nameIndex + 1 && arguments[nameIndex + 1].equalsIgnoreCase("@s") ? nameIndex + 2 : nameIndex + 1;
         if (arguments.length < actionIndex + 2) {
             sendUsage(player);
             return true;
@@ -111,16 +178,19 @@ public final class WaypointClientSession {
             sendFailure(player, "commands.verseplus.waypoint.not_found", name);
             return true;
         }
+        Waypoint.Icon updatedIcon = copyIcon(waypoint.icon());
         boolean changed = switch (arguments[actionIndex].toLowerCase(Locale.ROOT)) {
-            case "color" -> updateColor(waypoint.icon(), arguments, actionIndex);
-            case "style" -> updateStyle(waypoint.icon(), arguments, actionIndex);
+            case "color" -> updateColor(updatedIcon, arguments, actionIndex);
+            case "style" -> updateStyle(updatedIcon, arguments, actionIndex);
             default -> false;
         };
         if (!changed || !hasOnlySelfSelector(arguments, actionIndex + colorOrStyleLength(arguments, actionIndex))) {
             sendUsage(player);
             return true;
         }
-        track(client, player, name, waypoint);
+        LocalWaypoint updated = new LocalWaypoint(waypoint.position(), updatedIcon);
+        WAYPOINTS.put(name, updated);
+        track(client, player, name, updated);
         player.sendSystemMessage(Component.translatable("commands.verseplus.waypoint.local_saved"));
         return true;
     }
