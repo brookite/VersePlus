@@ -2,6 +2,7 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.features.containerlocks.ContainerLockComponents;
 import io.github.brookite.verseplus.features.containerlocks.ContainerLocksFeature;
+import io.github.brookite.verseplus.features.inhabited.InhabitedFeature;
 import io.github.brookite.verseplus.features.loyalpets.LoyalPetsFeature;
 import io.github.brookite.verseplus.features.wardenstaff.WardenStaffFeature;
 import io.github.brookite.verseplus.features.waypoints.WaypointFeature;
@@ -165,6 +166,7 @@ public class VersePlus implements ModInitializer {
         RegisterBlocks.initialize();
         RegisterItems.initialize();
         ContainerLocksFeature.initialize();
+        InhabitedFeature.initialize();
         WardenStaffFeature.initialize();
         WaypointFeature.initialize();
         RegisterPotions.initialize();
