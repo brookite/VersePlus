@@ -22,7 +22,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Warden Staff
   - crafted from three echo shards and a Warden Rod dropped when a player kills a Warden
   - charges for 1.7 seconds before firing a through-wall sonic boom
-  - has 64 durability and a 30-second cooldown after every completed shot
+  - has 64 durability and a 5-second cooldown after every completed shot
 - Obsidian Boats
   - rarely found in Nether Fortress chests
   - ride just above lava, travel more slowly than normal boats, and sink after 2500 blocks of lava travel
@@ -38,6 +38,10 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - broken chests and barrels drop their contents and installed lock, while shulker boxes keep their vanilla contents-preserving behavior
 - Mannequin persistent nickname visibility
 - Players can be renamed with name tags
+- Player waypoint editing
+  - create, remove, and style named points at the command executor's current position; coordinate arguments are not accepted
+  - everyone may use their own points, while operators can target players with selectors such as `@s` and `@a`
+  - on servers without VersePlus, named points remain local to the current connection
 - Collection challenges for every ore block, every non-player mob head, and every music disc
 - Baby spiders natural in adult spiders
 - Spiders can naturally spawn with Weaving at night (*7% chance*)

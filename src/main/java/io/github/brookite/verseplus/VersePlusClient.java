@@ -2,6 +2,7 @@ package io.github.brookite.verseplus;
 
 import io.github.brookite.verseplus.enums.SpiderVariant;
 import io.github.brookite.verseplus.features.obsidianboat.client.ObsidianBoatRenderer;
+import io.github.brookite.verseplus.features.waypoints.client.WaypointClientSession;
 import io.github.brookite.verseplus.registries.CustomEntityModelLayers;
 import io.github.brookite.verseplus.registries.RegisterBlocks;
 import io.github.brookite.verseplus.registries.RegisterEntities;
@@ -36,6 +37,7 @@ public class VersePlusClient  implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        WaypointClientSession.initialize();
         registerSpiders();
         EntityRenderers.register(RegisterEntities.OBSIDIAN_BOAT_ENTITY, ObsidianBoatRenderer::new);
         BlockColorRegistry.register(List.of(BlockTintSources.grass()), RegisterBlocks.GRASS_TRAP);

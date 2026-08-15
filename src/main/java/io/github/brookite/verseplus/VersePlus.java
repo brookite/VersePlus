@@ -4,6 +4,7 @@ import io.github.brookite.verseplus.features.containerlocks.ContainerLockCompone
 import io.github.brookite.verseplus.features.containerlocks.ContainerLocksFeature;
 import io.github.brookite.verseplus.features.loyalpets.LoyalPetsFeature;
 import io.github.brookite.verseplus.features.wardenstaff.WardenStaffFeature;
+import io.github.brookite.verseplus.features.waypoints.WaypointFeature;
 import io.github.brookite.verseplus.registries.RegisterBlocks;
 import io.github.brookite.verseplus.registries.RegisterEntities;
 import io.github.brookite.verseplus.registries.RegisterFeatures;
@@ -165,6 +166,7 @@ public class VersePlus implements ModInitializer {
         RegisterItems.initialize();
         ContainerLocksFeature.initialize();
         WardenStaffFeature.initialize();
+        WaypointFeature.initialize();
         RegisterPotions.initialize();
         RegisterEntities.initialize();
         DispenserBlock.registerBehavior(RegisterItems.THROWABLE_FIREBALL_ITEM,

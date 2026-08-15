@@ -34,7 +34,8 @@
 		"verseplus.chainedrespawn.mixins.json",
 		"verseplus.loompatterns.mixins.json",
 		"verseplus.obsidianboat.mixins.json",
-		"verseplus.containerlocks.mixins.json"
+		"verseplus.containerlocks.mixins.json",
+		"verseplus.waypoints.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",
