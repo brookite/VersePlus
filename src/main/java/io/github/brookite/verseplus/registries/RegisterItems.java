@@ -52,7 +52,7 @@ public class RegisterItems {
                     .enchantable(1)
                     .repairable(Items.ECHO_SHARD)
                     .rarity(Rarity.EPIC)
-                    .useCooldown(20));
+                    .useCooldown(5));
     public static final Item OBSIDIAN_BOAT_ITEM = register("obsidian_boat",
             properties -> new ObsidianBoatItem(RegisterEntities.OBSIDIAN_BOAT_ENTITY, properties),
             new Item.Properties()
