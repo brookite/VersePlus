@@ -45,6 +45,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
   - optionally choose a named color directly after `add`, or use `hex <RRGGBB>`
   - everyone may use their own points, while operators can target players with selectors such as `@s` and `@a`
   - on servers without VersePlus, named points remain local to the current connection
+- The edit-world screen can enable or disable commands for an existing single-player world
 - Operator-only `/inhabited` scans saved region files in the background and reports clusters of long-inhabited areas without loading or generating chunks
 - Collection challenges for every ore block, every non-player mob head, and every music disc
 - Baby spiders natural in adult spiders

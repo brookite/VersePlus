@@ -18,6 +18,10 @@
     "VillageSiegeMixin",
     "ZombieFullMoonSpawnMixin"
   ],
+  "client": [
+    "accessor.LevelStorageAccessInvoker",
+    "client.EditWorldScreenMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
