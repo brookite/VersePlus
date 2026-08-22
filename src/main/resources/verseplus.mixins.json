@@ -6,6 +6,7 @@
     "accessor.LootPoolSingletonContainerAccessor",
     "EndermanDropMixin",
     "GhastTearPickupDelayMixin",
+    "ItemEntityGraveMetadataCleanupMixin",
     "MannequinNameMixin",
     "MobNaturalSpawnEffectsMixin",
     "LootEntryDefaultQualityMixin",
