@@ -9,6 +9,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import org.jspecify.annotations.Nullable;
 
 public final class PetOwnerResolver {
+    private static final double PRIMARY_OWNER_PREFERENCE_RADIUS_SQUARED = 12.0 * 12.0;
+
     private PetOwnerResolver() {
     }
 
@@ -18,27 +20,27 @@ public final class PetOwnerResolver {
         }
 
         LivingEntity primaryOwner = pet.getOwner();
-        if (isAvailableInLevel(primaryOwner, level)) {
+        boolean isPrimaryOwnerAvailable = isAvailableInLevel(primaryOwner, level);
+        if (isPrimaryOwnerAvailable
+                && pet.distanceToSqr(primaryOwner) <= PRIMARY_OWNER_PREFERENCE_RADIUS_SQUARED) {
             return primaryOwner;
         }
 
         PetOwnershipData ownership = pet.getAttached(LoyalPetAttachments.PET_OWNERSHIP);
-        if (ownership == null) {
-            return null;
-        }
+        LivingEntity nearest = isPrimaryOwnerAvailable ? primaryOwner : null;
+        double nearestDistance = nearest == null ? Double.MAX_VALUE : pet.distanceToSqr(nearest);
+        if (ownership != null) {
+            for (var ownerId : ownership.additionalOwners()) {
+                ServerPlayer candidate = level.getServer().getPlayerList().getPlayer(ownerId);
+                if (!isAvailableInLevel(candidate, level)) {
+                    continue;
+                }
 
-        ServerPlayer nearest = null;
-        double nearestDistance = Double.MAX_VALUE;
-        for (var ownerId : ownership.additionalOwners()) {
-            ServerPlayer candidate = level.getServer().getPlayerList().getPlayer(ownerId);
-            if (!isAvailableInLevel(candidate, level)) {
-                continue;
-            }
-
-            double distance = pet.distanceToSqr(candidate);
-            if (distance < nearestDistance) {
-                nearest = candidate;
-                nearestDistance = distance;
+                double distance = pet.distanceToSqr(candidate);
+                if (distance < nearestDistance) {
+                    nearest = candidate;
+                    nearestDistance = distance;
+                }
             }
         }
         return nearest;
