@@ -8,7 +8,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -21,6 +20,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 public class ObsidianBoatEntity extends Boat {
     public static final float MAX_TRAVEL_DISTANCE = 2500.0F;
     public static final float MAX_SINK_DEPTH = 0.20F;
+    private static final float LOW_TRAVEL_RESOURCE_THRESHOLD = 200.0F;
     private static final float PASSENGER_CLEARANCE = 0.25F;
     private static final String TRAVEL_DISTANCE_KEY = "ObsidianBoatTravelDistance";
     private static final EntityDataAccessor<Float> TRAVEL_DISTANCE = SynchedEntityData.defineId(
@@ -49,16 +49,6 @@ public class ObsidianBoatEntity extends Boat {
         }
 
         super.tick();
-
-        if (!level().isClientSide() && getTravelDistance() >= MAX_TRAVEL_DISTANCE) {
-            if (getFluidHeight(FluidTags.LAVA) > 0.0) {
-                for (Entity passenger : getPassengers()) {
-                    passenger.lavaIgnite();
-                }
-            }
-            ejectPassengers();
-            discard();
-        }
     }
 
     private void trackLavaTravel() {
@@ -80,6 +70,15 @@ public class ObsidianBoatEntity extends Boat {
         return entityData.get(TRAVEL_DISTANCE);
     }
 
+    public boolean hasTravelResource() {
+        return getTravelDistance() < MAX_TRAVEL_DISTANCE;
+    }
+
+    public boolean hasLowTravelResource() {
+        float remainingDistance = MAX_TRAVEL_DISTANCE - getTravelDistance();
+        return remainingDistance > 0.0F && remainingDistance < LOW_TRAVEL_RESOURCE_THRESHOLD;
+    }
+
     public void setTravelDistance(float distance) {
         entityData.set(TRAVEL_DISTANCE, Math.clamp(distance, 0.0F, MAX_TRAVEL_DISTANCE));
     }
@@ -95,7 +94,7 @@ public class ObsidianBoatEntity extends Boat {
 
     @Override
     protected double getDefaultGravity() {
-        return getFluidHeight(FluidTags.LAVA) > 0.0 ? 0.0 : super.getDefaultGravity();
+        return hasTravelResource() && getFluidHeight(FluidTags.LAVA) > 0.0 ? 0.0 : super.getDefaultGravity();
     }
 
     @Override

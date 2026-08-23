@@ -26,6 +26,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Obsidian Boats
   - rarely found in Nether Fortress chests
   - ride just above lava, travel more slowly than normal boats, and sink after 2500 blocks of lava travel
+  - slow down by another 25% for their final 200 blocks of lava travel
   - sink in water and cannot be used there
   - sit progressively lower in lava as their remaining travel resource decreases
 - Container Locks
