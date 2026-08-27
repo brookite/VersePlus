@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:adventure/kill_a_mob",
+  "display": {
+    "icon": { "id": "verseplus:warden_heart" },
+    "title": { "translate": "advancement.verseplus.silence_the_echo.title" },
+    "description": { "translate": "advancement.verseplus.silence_the_echo.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "slay_warden": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": { "type": "minecraft:warden" }
+      }
+    }
+  },
+  "requirements": [
+    ["slay_warden"]
+  ],
+  "rewards": { "experience": 100 }
+}

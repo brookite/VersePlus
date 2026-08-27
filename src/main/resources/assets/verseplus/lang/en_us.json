@@ -63,5 +63,7 @@
   "advancement.verseplus.collect_all_ores.title": "Ore Collector",
   "advancement.verseplus.collect_all_ores.description": "Collect every ore block, including deepslate variants",
   "advancement.verseplus.collect_all_mob_heads.title": "Head Hunter",
-  "advancement.verseplus.collect_all_mob_heads.description": "Collect every mob head except a player head"
+  "advancement.verseplus.collect_all_mob_heads.description": "Collect every mob head except a player head",
+  "advancement.verseplus.silence_the_echo.title": "When the Echo Fades",
+  "advancement.verseplus.silence_the_echo.description": "Defeat a Warden"
 }

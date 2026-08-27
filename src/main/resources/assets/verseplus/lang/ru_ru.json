@@ -63,5 +63,7 @@
   "advancement.verseplus.collect_all_ores.title": "Рудный коллекционер",
   "advancement.verseplus.collect_all_ores.description": "Собрать все рудные блоки, включая глубинные",
   "advancement.verseplus.collect_all_mob_heads.title": "Охотник за головами",
-  "advancement.verseplus.collect_all_mob_heads.description": "Собрать головы всех мобов, кроме игрока"
+  "advancement.verseplus.collect_all_mob_heads.description": "Собрать головы всех мобов, кроме игрока",
+  "advancement.verseplus.silence_the_echo.title": "Когда смолкло эхо",
+  "advancement.verseplus.silence_the_echo.description": "Одолейте Хранителя"
 }
