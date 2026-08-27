@@ -1,13 +1,13 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_warden_rod": {
+    "has_warden_heart": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "verseplus:warden_rod"
+              "verseplus:warden_heart"
             ]
           }
         ]
@@ -16,7 +16,7 @@
   },
   "requirements": [
     [
-      "has_warden_rod"
+      "has_warden_heart"
     ]
   ],
   "rewards": {

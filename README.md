@@ -20,7 +20,7 @@ VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 - Player's drop NBT log (in world folder, `data/players_drop_graveyard.dat`)
 - Throwable fireball item
 - Warden Staff
-  - crafted from three echo shards and a Warden Rod dropped when a player kills a Warden
+  - crafted from three echo shards and a Warden Heart dropped when a player kills a Warden
   - charges for 1.7 seconds before firing a through-wall sonic boom
   - has 64 durability and a 5-second cooldown after every completed shot
 - Obsidian Boats

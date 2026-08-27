@@ -20,7 +20,7 @@ public final class WardenStaffFeature {
             if (resourceManager.identifier().equals(WARDEN_LOOT_TABLE) && id.isBuiltin()) {
                 lootManager.pool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
-                        .add(LootItem.lootTableItem(RegisterItems.WARDEN_ROD))
+                        .add(LootItem.lootTableItem(RegisterItems.WARDEN_HEART))
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .build());
             }

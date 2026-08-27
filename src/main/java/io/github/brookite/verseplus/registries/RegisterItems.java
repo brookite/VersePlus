@@ -44,7 +44,7 @@ public class RegisterItems {
     public static final Item FROSTED_ICE_ITEM = register("frosted_ice",
             properties -> new BlockItem(Blocks.FROSTED_ICE, properties),
             new Item.Properties());
-    public static final Item WARDEN_ROD = register("warden_rod", Item::new,
+    public static final Item WARDEN_HEART = register("warden_heart", Item::new,
             new Item.Properties().rarity(Rarity.RARE));
     public static final Item WARDEN_STAFF = register("warden_staff", WardenStaffItem::new,
             new Item.Properties()
@@ -90,7 +90,7 @@ public class RegisterItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
                 entries.insertAfter(RegisterItems.RARE_ENDER_PEARL_ITEM, RegisterItems.CHARGED_RARE_ENDER_PEARL_ITEM));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
-                entries.insertAfter(Items.ECHO_SHARD, RegisterItems.WARDEN_ROD));
+                entries.insertAfter(Items.ECHO_SHARD, RegisterItems.WARDEN_HEART));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->
                 entries.accept(RegisterItems.WARDEN_STAFF));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries ->

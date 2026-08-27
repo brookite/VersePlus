@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "EEE",
-    " R "
+    " H "
   ],
   "key": {
     "E": "minecraft:echo_shard",
-    "R": "verseplus:warden_rod"
+    "H": "verseplus:warden_heart"
   },
   "result": {
     "id": "verseplus:warden_staff",

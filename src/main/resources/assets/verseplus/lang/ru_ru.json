@@ -4,7 +4,7 @@
   "item.verseplus.rare_ender_pearl_item": "Редкий эндер-жемчуг",
   "item.verseplus.charged_rare_ender_pearl_item": "Заряженный редкий эндер-жемчуг",
   "item.verseplus.frosted_ice": "Талый лед",
-  "item.verseplus.warden_rod": "Стержень хранителя",
+  "item.verseplus.warden_heart": "Сердце хранителя",
   "item.verseplus.warden_staff": "Посох хранителя",
   "commands.verseplus.waypoint.added": "Waypoint добавлен или перемещён для игрока(ов): %s.",
   "commands.verseplus.waypoint.removed": "Waypoint удалён для игрока(ов): %s.",
