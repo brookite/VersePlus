@@ -7,7 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 public final class WardenStaffFeature {
     private static final Identifier WARDEN_LOOT_TABLE = Identifier.withDefaultNamespace("entities/warden");
@@ -19,7 +19,7 @@ public final class WardenStaffFeature {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder) -> {
             if (resourceManager.identifier().equals(WARDEN_LOOT_TABLE) && id.isBuiltin()) {
                 lootManager.pool(LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1))
+                        .setRolls(ContextIntProviders.exactly(1))
                         .add(LootItem.lootTableItem(RegisterItems.WARDEN_HEART))
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .build());

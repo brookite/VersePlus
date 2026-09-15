@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -67,7 +68,7 @@ final class ContainerLockInteraction {
         removeLockData(target.blockEntity());
         ItemStack lockStack = ContainerLocks.createLock(target.data());
         if (!player.getInventory().add(lockStack) && !lockStack.isEmpty()) {
-            player.drop(lockStack, false);
+            player.drop(lockStack, false, Prediction.SERVER_ONLY);
         }
 
         level.playSound(
@@ -180,7 +181,7 @@ final class ContainerLockInteraction {
         if (data.containsKey()) {
             ItemStack key = ContainerLocks.createKey(data);
             if (!player.getInventory().add(key) && !key.isEmpty()) {
-                player.drop(key, false);
+                player.drop(key, false, Prediction.SERVER_ONLY);
             }
         }
 
@@ -218,7 +219,7 @@ final class ContainerLockInteraction {
         if (data.containsKey()) {
             ItemStack key = ContainerLocks.createKey(data);
             if (!player.getInventory().add(key) && !key.isEmpty()) {
-                player.drop(key, false);
+                player.drop(key, false, Prediction.SERVER_ONLY);
             }
         }
 

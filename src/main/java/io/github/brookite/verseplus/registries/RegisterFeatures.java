@@ -1,25 +1,23 @@
 package io.github.brookite.verseplus.registries;
 
+import com.mojang.serialization.MapCodec;
 import io.github.brookite.verseplus.VersePlus;
 import io.github.brookite.verseplus.worldgen.SuspiciousOceanFloorFeature;
 import io.github.brookite.verseplus.worldgen.UnderwaterBlockPileFeature;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.BlockPileConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class RegisterFeatures {
-    public static final Feature<BlockPileConfiguration> UNDERWATER_BLOCK_PILE = Registry.register(
-            BuiltInRegistries.FEATURE,
+    public static final MapCodec<UnderwaterBlockPileFeature> UNDERWATER_BLOCK_PILE = Registry.register(
+            BuiltInRegistries.FEATURE_TYPE,
             Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, "underwater_block_pile"),
-            new UnderwaterBlockPileFeature(BlockPileConfiguration.CODEC)
+            UnderwaterBlockPileFeature.CODEC
     );
-    public static final Feature<NoneFeatureConfiguration> SUSPICIOUS_OCEAN_FLOOR = Registry.register(
-            BuiltInRegistries.FEATURE,
+    public static final MapCodec<SuspiciousOceanFloorFeature> SUSPICIOUS_OCEAN_FLOOR = Registry.register(
+            BuiltInRegistries.FEATURE_TYPE,
             Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, "suspicious_ocean_floor"),
-            new SuspiciousOceanFloorFeature(NoneFeatureConfiguration.CODEC)
+            SuspiciousOceanFloorFeature.CODEC
     );
 
     public static void initialize() {

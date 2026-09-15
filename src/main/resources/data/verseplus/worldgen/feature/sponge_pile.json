@@ -1,0 +1,6 @@
+{
+  "type": "verseplus:underwater_block_pile",
+  "state_provider": {
+    "id": "minecraft:wet_sponge"
+  }
+}

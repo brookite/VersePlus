@@ -5,6 +5,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -38,11 +39,11 @@ public abstract class PlayerDropMixin extends LivingEntity {
      * @reason increase player drop lifetime
      */
     @Override
-    public ItemEntity drop(ItemStack stack, boolean dropAtSelf, boolean retainOwnership) {
+    public ItemEntity drop(ItemStack stack, boolean dropAtSelf, Prediction prediction) {
         if (this.versePlus$activeGraveId != null) {
             versePlus$markGraveStack(stack);
         }
-        ItemEntity result = super.drop(stack, dropAtSelf, retainOwnership);
+        ItemEntity result = super.drop(stack, dropAtSelf, prediction);
         if (result == null) {
             return null;
         }

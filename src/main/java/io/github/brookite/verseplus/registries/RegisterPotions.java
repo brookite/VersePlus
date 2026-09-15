@@ -2,7 +2,6 @@ package io.github.brookite.verseplus.registries;
 
 import io.github.brookite.verseplus.VersePlus;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -51,10 +50,6 @@ public class RegisterPotions {
                     PotionContents.createItemStack(Items.LINGERING_POTION, Potions.LONG_INVISIBILITY),
                     PotionContents.createItemStack(Items.LINGERING_POTION, TRUE_INVISIBILITY)
             );
-        });
-
-        FabricPotionBrewingBuilder.BUILD.register(builder -> {
-            builder.addMix(Potions.LONG_INVISIBILITY, Items.GLOWSTONE_DUST, TRUE_INVISIBILITY);
         });
     }
 

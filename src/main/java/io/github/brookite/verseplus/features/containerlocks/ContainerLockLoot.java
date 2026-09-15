@@ -60,8 +60,8 @@ final class ContainerLockLoot {
                 return;
             }
 
-            var origin = context.getOptionalParameter(LootContextParams.ORIGIN);
-            var droppedState = context.getOptionalParameter(LootContextParams.BLOCK_STATE);
+            var origin = context.getOptional(LootContextParams.ORIGIN);
+            var droppedState = context.getOptional(LootContextParams.BLOCK_STATE);
             if (origin != null && droppedState != null && droppedState.getBlock() instanceof ButtonBlock) {
                 BlockPos pos = BlockPos.containing(origin);
                 LockData buttonLock = ButtonLockSavedData.get(context.getLevel()).getLock(pos);
@@ -77,7 +77,7 @@ final class ContainerLockLoot {
                 }
             }
 
-            BaseContainerBlockEntity container = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
+            BaseContainerBlockEntity container = context.getOptional(LootContextParams.BLOCK_ENTITY)
                     instanceof BaseContainerBlockEntity baseContainer ? baseContainer : null;
             if (container == null) {
                 return;

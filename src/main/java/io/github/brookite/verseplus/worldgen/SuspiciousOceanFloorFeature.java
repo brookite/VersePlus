@@ -1,6 +1,6 @@
 package io.github.brookite.verseplus.worldgen;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.github.brookite.verseplus.VersePlus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,25 +13,24 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.storage.loot.LootTable;
 
-public class SuspiciousOceanFloorFeature extends Feature<NoneFeatureConfiguration> {
+public record SuspiciousOceanFloorFeature() implements Feature {
+    public static final MapCodec<SuspiciousOceanFloorFeature> CODEC = MapCodec.unit(SuspiciousOceanFloorFeature::new);
     private static final ResourceKey<LootTable> LOOT_TABLE = ResourceKey.create(
             Registries.LOOT_TABLE,
             Identifier.fromNamespaceAndPath(VersePlus.MOD_ID, "archaeology/cold_ocean_floor")
     );
 
-    public SuspiciousOceanFloorFeature(Codec<NoneFeatureConfiguration> codec) {
-        super(codec);
+    @Override
+    public MapCodec<SuspiciousOceanFloorFeature> codec() {
+        return CODEC;
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-        WorldGenLevel level = context.level();
-        BlockPos waterPos = context.origin();
+    public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos waterPos) {
         BlockPos floorPos = waterPos.below();
 
         if (!level.getBlockState(waterPos).is(Blocks.WATER)) {
@@ -44,7 +43,6 @@ public class SuspiciousOceanFloorFeature extends Feature<NoneFeatureConfiguratio
             return false;
         }
 
-        RandomSource random = context.random();
         level.setBlock(floorPos, replacement, Block.UPDATE_ALL);
 
         BlockEntity blockEntity = level.getBlockEntity(floorPos);

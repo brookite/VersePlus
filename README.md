@@ -1,8 +1,8 @@
 VersePlus is a lightweight Fabric MC mod for vanilla enhancement
 
-*Current supported MC version:* **26.2**
+*Current supported MC version:* **26.3**
 
-*Release status:* **0.10.0-beta**
+*Release status:* **0.10.0**
 
 ## Current Features
 - Increased up to 6x player's drop lifetime (30 minutes)

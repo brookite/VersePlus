@@ -28,7 +28,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
@@ -147,7 +147,7 @@ public class VersePlus implements ModInitializer {
 
     private Map<Identifier, LootPool> getNewLoots() {
         var rarePearlStrongholdLoot = LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1))
+                .setRolls(ContextIntProviders.exactly(1))
                 .add(LootItem.lootTableItem(RegisterItems.RARE_ENDER_PEARL_ITEM))
                 .when(LootItemRandomChanceCondition.randomChance(VersePlusChances.RARE_ENDER_PEARL_STRONGHOLD_CHEST_LOOT)).build();
 
